@@ -1,4 +1,5 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Analytics } from "@vercel/analytics/react";
 
 import { AuthProvider } from "./context/AuthContext";
 
@@ -60,6 +61,7 @@ const App = () => {
   return (
     <BrowserRouter>
       <AuthProvider>
+        <Analytics />
         <Routes>
           {/* HOME */}
           <Route path="/" element={<Home />} />
