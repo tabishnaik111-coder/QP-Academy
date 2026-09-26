@@ -1,0 +1,1618 @@
+/* =========================================================
+   QPA TEST ENGINE
+   PART 38 — RESPONSIVE / ANIMATION / UI POLISH
+   ========================================================= */
+
+.test-engine-page {
+  position: relative;
+
+  min-height: 80vh;
+
+  padding: 7rem 0 5rem;
+
+  overflow: hidden;
+
+  background:
+    radial-gradient(
+      circle at 8% 12%,
+      rgba(99, 102, 241, 0.055),
+      transparent 28%
+    ),
+    radial-gradient(
+      circle at 92% 25%,
+      rgba(168, 85, 247, 0.05),
+      transparent 28%
+    ),
+    var(--qpa-background);
+}
+
+
+/* =========================================================
+   TEST HEADER
+========================================================= */
+
+.test-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+
+  gap: 2rem;
+
+  margin-bottom: 2rem;
+}
+
+.test-back {
+  display: inline-flex;
+  align-items: center;
+
+  gap: 0.45rem;
+
+  margin-bottom: 0.8rem;
+
+  color:
+    var(--qpa-primary);
+
+  font-size:
+    0.82rem;
+
+  font-weight:
+    700;
+
+  text-decoration:
+    none;
+
+  transition:
+    transform 0.22s ease,
+    opacity 0.22s ease;
+}
+
+.test-back:hover {
+  transform:
+    translateX(-3px);
+
+  opacity:
+    0.82;
+}
+
+.test-back:focus-visible {
+  outline:
+    3px solid rgba(109, 93, 252, 0.18);
+
+  outline-offset:
+    4px;
+
+  border-radius:
+    6px;
+}
+
+.test-header h1 {
+  margin:
+    0 0 0.4rem;
+
+  font-size:
+    clamp(1.8rem, 4vw, 2.8rem);
+
+  line-height:
+    1.08;
+
+  letter-spacing:
+    -0.035em;
+}
+
+.test-header p {
+  margin:
+    0;
+
+  color:
+    var(--qpa-text-muted);
+
+  line-height:
+    1.6;
+}
+
+
+/* =========================================================
+   TEST TIMER
+========================================================= */
+
+.test-timer {
+  position:
+    relative;
+
+  min-width:
+    130px;
+
+  padding:
+    1rem 1.2rem;
+
+  overflow:
+    hidden;
+
+  border:
+    1px solid var(--qpa-border);
+
+  border-radius:
+    var(--qpa-radius-md);
+
+  background:
+    var(--qpa-surface);
+
+  box-shadow:
+    var(--qpa-shadow);
+
+  text-align:
+    center;
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    border-color 0.25s ease;
+}
+
+.test-timer::before {
+  content:
+    "";
+
+  position:
+    absolute;
+
+  top:
+    0;
+
+  left:
+    -100%;
+
+  width:
+    70%;
+
+  height:
+    100%;
+
+  transform:
+    skewX(-18deg);
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.45),
+      transparent
+    );
+
+  opacity:
+    0;
+
+  pointer-events:
+    none;
+
+  transition:
+    left 0.65s ease,
+    opacity 0.25s ease;
+}
+
+.test-timer:hover {
+  transform:
+    translateY(-2px);
+
+  border-color:
+    rgba(109, 93, 252, 0.14);
+
+  box-shadow:
+    var(--qpa-shadow-md);
+}
+
+.test-timer:hover::before {
+  left:
+    125%;
+
+  opacity:
+    1;
+}
+
+.test-timer span {
+  position:
+    relative;
+
+  z-index:
+    1;
+
+  display:
+    block;
+
+  margin-bottom:
+    0.2rem;
+
+  color:
+    var(--qpa-text-muted);
+
+  font-size:
+    0.7rem;
+
+  font-weight:
+    700;
+
+  text-transform:
+    uppercase;
+
+  letter-spacing:
+    0.04em;
+}
+
+.test-timer strong {
+  position:
+    relative;
+
+  z-index:
+    1;
+
+  font-size:
+    1.5rem;
+
+  font-variant-numeric:
+    tabular-nums;
+
+  letter-spacing:
+    -0.02em;
+}
+
+
+/* =========================================================
+   START / COMPLETE CARDS
+========================================================= */
+
+.test-start-card,
+.test-complete-card {
+  position:
+    relative;
+
+  max-width:
+    700px;
+
+  margin:
+    4rem auto;
+
+  padding:
+    3rem 2rem;
+
+  overflow:
+    hidden;
+
+  border:
+    1px solid var(--qpa-border);
+
+  border-radius:
+    var(--qpa-radius-lg);
+
+  background:
+    var(--qpa-surface);
+
+  box-shadow:
+    var(--qpa-shadow);
+
+  text-align:
+    center;
+
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    border-color 0.3s ease;
+}
+
+.test-start-card::before,
+.test-complete-card::before {
+  content:
+    "";
+
+  position:
+    absolute;
+
+  top:
+    -100px;
+
+  right:
+    -100px;
+
+  width:
+    240px;
+
+  height:
+    240px;
+
+  border-radius:
+    50%;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(109, 93, 252, 0.09),
+      transparent 68%
+    );
+
+  pointer-events:
+    none;
+}
+
+.test-start-card:hover,
+.test-complete-card:hover {
+  transform:
+    translateY(-3px);
+
+  box-shadow:
+    var(--qpa-shadow-md);
+
+  border-color:
+    rgba(109, 93, 252, 0.12);
+}
+
+
+/* =========================================================
+   START / COMPLETE ICON
+========================================================= */
+
+.test-start-icon,
+.test-complete-icon {
+  position:
+    relative;
+
+  width:
+    72px;
+
+  height:
+    72px;
+
+  display:
+    grid;
+
+  place-items:
+    center;
+
+  margin:
+    0 auto 1.2rem;
+
+  border-radius:
+    22px;
+
+  background:
+    var(--qpa-gradient);
+
+  color:
+    #fff;
+
+  font-size:
+    1.7rem;
+
+  box-shadow:
+    0 15px 35px rgba(109, 93, 252, 0.22);
+
+  transition:
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.3s ease;
+}
+
+.test-start-icon::after,
+.test-complete-icon::after {
+  content:
+    "";
+
+  position:
+    absolute;
+
+  inset:
+    0;
+
+  border-radius:
+    inherit;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.2),
+      transparent 45%
+    );
+
+  pointer-events:
+    none;
+}
+
+.test-start-card:hover .test-start-icon,
+.test-complete-card:hover .test-complete-icon {
+  transform:
+    translateY(-4px)
+    scale(1.04);
+
+  box-shadow:
+    0 19px 40px rgba(109, 93, 252, 0.27);
+}
+
+.test-complete-icon {
+  border-radius:
+    50%;
+}
+
+
+/* =========================================================
+   TEST BADGE
+========================================================= */
+
+.test-badge {
+  display:
+    inline-flex;
+
+  padding:
+    0.4rem 0.7rem;
+
+  margin-bottom:
+    0.8rem;
+
+  border-radius:
+    999px;
+
+  background:
+    rgba(109, 93, 252, 0.09);
+
+  color:
+    var(--qpa-primary);
+
+  font-size:
+    0.7rem;
+
+  font-weight:
+    800;
+
+  text-transform:
+    uppercase;
+
+  letter-spacing:
+    0.04em;
+
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease;
+}
+
+.test-badge:hover {
+  transform:
+    translateY(-1px);
+
+  background:
+    rgba(109, 93, 252, 0.13);
+}
+
+
+/* =========================================================
+   START / COMPLETE TEXT
+========================================================= */
+
+.test-start-card h2,
+.test-complete-card h2 {
+  margin-bottom:
+    0.7rem;
+
+  letter-spacing:
+    -0.025em;
+}
+
+.test-start-card p,
+.test-complete-card p {
+  max-width:
+    540px;
+
+  margin:
+    0 auto 1.5rem;
+
+  color:
+    var(--qpa-text-muted);
+
+  line-height:
+    1.7;
+}
+
+
+/* =========================================================
+   START INFO
+========================================================= */
+
+.test-start-info {
+  display:
+    flex;
+
+  justify-content:
+    center;
+
+  gap:
+    1rem;
+
+  margin-bottom:
+    2rem;
+}
+
+.test-start-info div {
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  gap:
+    0.45rem;
+
+  padding:
+    0.65rem 0.9rem;
+
+  border:
+    1px solid var(--qpa-border);
+
+  border-radius:
+    var(--qpa-radius-sm);
+
+  color:
+    var(--qpa-text-muted);
+
+  background:
+    var(--qpa-surface-soft);
+
+  font-size:
+    0.75rem;
+
+  transition:
+    transform 0.22s ease,
+    border-color 0.22s ease,
+    background 0.22s ease,
+    box-shadow 0.22s ease;
+}
+
+.test-start-info div:hover {
+  transform:
+    translateY(-2px);
+
+  border-color:
+    rgba(109, 93, 252, 0.14);
+
+  background:
+    rgba(109, 93, 252, 0.035);
+
+  box-shadow:
+    0 7px 18px rgba(15, 23, 42, 0.045);
+}
+
+.test-start-info i {
+  color:
+    var(--qpa-primary);
+}
+
+
+/* =========================================================
+   TEST WORKSPACE
+========================================================= */
+
+.test-workspace {
+  display:
+    grid;
+
+  gap:
+    1.2rem;
+}
+
+
+/* =========================================================
+   SOURCE / INPUT CARDS
+========================================================= */
+
+.test-source-card,
+.test-input-card {
+  position:
+    relative;
+
+  overflow:
+    hidden;
+
+  border:
+    1px solid var(--qpa-border);
+
+  border-radius:
+    var(--qpa-radius-lg);
+
+  background:
+    var(--qpa-surface);
+
+  box-shadow:
+    var(--qpa-shadow);
+
+  transition:
+    box-shadow 0.3s ease,
+    border-color 0.3s ease,
+    transform 0.3s ease;
+}
+
+.test-source-card:hover,
+.test-input-card:hover {
+  border-color:
+    rgba(109, 93, 252, 0.12);
+
+  box-shadow:
+    var(--qpa-shadow-md);
+}
+
+
+/* =========================================================
+   SOURCE HEADER
+========================================================= */
+
+.test-source-header {
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  justify-content:
+    space-between;
+
+  gap:
+    1rem;
+
+  padding:
+    0.9rem 1.2rem;
+
+  border-bottom:
+    1px solid var(--qpa-border);
+
+  background:
+    var(--qpa-surface-soft);
+
+  color:
+    var(--qpa-text-muted);
+
+  font-size:
+    0.75rem;
+
+  font-weight:
+    700;
+}
+
+
+/* =========================================================
+   SOURCE TEXT
+========================================================= */
+
+.test-source-text {
+  padding:
+    1.8rem;
+
+  color:
+    var(--qpa-text);
+
+  font-size:
+    1.05rem;
+
+  line-height:
+    2;
+
+  white-space:
+    pre-wrap;
+
+  overflow-wrap:
+    anywhere;
+}
+
+
+/* =========================================================
+   INPUT CARD
+========================================================= */
+
+.test-input-card {
+  padding:
+    1.2rem;
+}
+
+.test-input-card label {
+  display:
+    block;
+
+  margin-bottom:
+    0.6rem;
+
+  font-size:
+    0.8rem;
+
+  font-weight:
+    800;
+}
+
+
+/* =========================================================
+   TEST TEXTAREA
+========================================================= */
+
+.test-input-card textarea {
+  width:
+    100%;
+
+  min-height:
+    240px;
+
+  resize:
+    vertical;
+
+  padding:
+    1.2rem;
+
+  border:
+    1px solid var(--qpa-border);
+
+  border-radius:
+    var(--qpa-radius-md);
+
+  outline:
+    none;
+
+  background:
+    var(--qpa-background);
+
+  color:
+    var(--qpa-text);
+
+  font:
+    inherit;
+
+  line-height:
+    1.8;
+
+  transition:
+    border-color var(--qpa-transition),
+    box-shadow var(--qpa-transition),
+    background 0.2s ease;
+}
+
+.test-input-card textarea:hover {
+  border-color:
+    rgba(109, 93, 252, 0.18);
+}
+
+.test-input-card textarea:focus {
+  border-color:
+    var(--qpa-primary);
+
+  background:
+    var(--qpa-surface);
+
+  box-shadow:
+    0 0 0 4px rgba(109, 93, 252, 0.1),
+    0 8px 24px rgba(109, 93, 252, 0.055);
+}
+
+.test-input-card textarea::placeholder {
+  color:
+    var(--qpa-text-muted);
+
+  opacity:
+    0.72;
+}
+
+
+/* =========================================================
+   INPUT FOOTER
+========================================================= */
+
+.test-input-footer {
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  justify-content:
+    space-between;
+
+  gap:
+    1rem;
+
+  margin-top:
+    0.8rem;
+
+  color:
+    var(--qpa-text-muted);
+
+  font-size:
+    0.75rem;
+}
+
+
+/* =========================================================
+   ERROR
+========================================================= */
+
+.test-error {
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  gap:
+    0.6rem;
+
+  margin-bottom:
+    1rem;
+
+  padding:
+    0.9rem 1rem;
+
+  border:
+    1px solid rgba(220, 38, 38, 0.2);
+
+  border-radius:
+    var(--qpa-radius-md);
+
+  background:
+    rgba(220, 38, 38, 0.05);
+
+  color:
+    #b91c1c;
+
+  font-size:
+    0.8rem;
+
+  line-height:
+    1.5;
+
+  animation:
+    qpaTestErrorIn 0.25s ease both;
+}
+
+
+/* =========================================================
+   COMPLETE ACTIONS
+========================================================= */
+
+.test-complete-actions {
+  display:
+    flex;
+
+  justify-content:
+    center;
+
+  gap:
+    0.8rem;
+
+  flex-wrap:
+    wrap;
+}
+
+
+/* =========================================================
+   TEST STATE
+========================================================= */
+
+.test-state {
+  min-height:
+    60vh;
+
+  display:
+    flex;
+
+  flex-direction:
+    column;
+
+  align-items:
+    center;
+
+  justify-content:
+    center;
+
+  padding:
+    2rem;
+
+  text-align:
+    center;
+}
+
+.test-state p {
+  color:
+    var(--qpa-text-muted);
+
+  line-height:
+    1.6;
+}
+
+
+/* =========================================================
+   TEST STATE ICON
+========================================================= */
+
+.test-state-icon {
+  width:
+    60px;
+
+  height:
+    60px;
+
+  display:
+    grid;
+
+  place-items:
+    center;
+
+  margin-bottom:
+    1rem;
+
+  border-radius:
+    50%;
+
+  background:
+    rgba(220, 38, 38, 0.08);
+
+  color:
+    #dc2626;
+
+  font-size:
+    1.3rem;
+
+  box-shadow:
+    0 10px 25px rgba(220, 38, 38, 0.07);
+
+  animation:
+    qpaTestStateIcon 2.5s ease-in-out infinite;
+}
+
+
+/* =========================================================
+   TEST RESULT CARD
+========================================================= */
+
+.test-result-card {
+  position:
+    relative;
+
+  max-width:
+    850px;
+
+  margin:
+    3rem auto;
+
+  padding:
+    3rem 2rem;
+
+  overflow:
+    hidden;
+
+  border:
+    1px solid var(--qpa-border);
+
+  border-radius:
+    var(--qpa-radius-lg);
+
+  background:
+    var(--qpa-surface);
+
+  box-shadow:
+    var(--qpa-shadow);
+
+  text-align:
+    center;
+
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    border-color 0.3s ease;
+}
+
+.test-result-card::before {
+  content:
+    "";
+
+  position:
+    absolute;
+
+  top:
+    -120px;
+
+  left:
+    -120px;
+
+  width:
+    260px;
+
+  height:
+    260px;
+
+  border-radius:
+    50%;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(109, 93, 252, 0.08),
+      transparent 70%
+    );
+
+  pointer-events:
+    none;
+}
+
+.test-result-card:hover {
+  transform:
+    translateY(-3px);
+
+  border-color:
+    rgba(109, 93, 252, 0.12);
+
+  box-shadow:
+    var(--qpa-shadow-md);
+}
+
+.test-result-card > p {
+  position:
+    relative;
+
+  z-index:
+    1;
+
+  margin-bottom:
+    2rem;
+
+  color:
+    var(--qpa-text-muted);
+
+  line-height:
+    1.6;
+}
+
+
+/* =========================================================
+   RESULT GRID
+========================================================= */
+
+.test-result-grid {
+  position:
+    relative;
+
+  z-index:
+    1;
+
+  display:
+    grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  gap:
+    1rem;
+
+  margin:
+    2rem 0;
+}
+
+
+/* =========================================================
+   RESULT ITEM
+========================================================= */
+
+.test-result-item {
+  position:
+    relative;
+
+  padding:
+    1.2rem;
+
+  overflow:
+    hidden;
+
+  border:
+    1px solid var(--qpa-border);
+
+  border-radius:
+    var(--qpa-radius-md);
+
+  background:
+    var(--qpa-surface-soft);
+
+  transition:
+    transform var(--qpa-transition),
+    box-shadow var(--qpa-transition),
+    border-color var(--qpa-transition),
+    background 0.25s ease;
+}
+
+.test-result-item::after {
+  content:
+    "";
+
+  position:
+    absolute;
+
+  top:
+    0;
+
+  left:
+    -80%;
+
+  width:
+    45%;
+
+  height:
+    100%;
+
+  transform:
+    skewX(-18deg);
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.48),
+      transparent
+    );
+
+  opacity:
+    0;
+
+  pointer-events:
+    none;
+
+  transition:
+    left 0.6s ease,
+    opacity 0.25s ease;
+}
+
+.test-result-item:hover {
+  transform:
+    translateY(-3px);
+
+  border-color:
+    rgba(109, 93, 252, 0.13);
+
+  background:
+    rgba(109, 93, 252, 0.025);
+
+  box-shadow:
+    var(--qpa-shadow);
+}
+
+.test-result-item:hover::after {
+  left:
+    125%;
+
+  opacity:
+    1;
+}
+
+.test-result-item span {
+  position:
+    relative;
+
+  z-index:
+    1;
+
+  display:
+    block;
+
+  margin-bottom:
+    0.35rem;
+
+  color:
+    var(--qpa-text-muted);
+
+  font-size:
+    0.7rem;
+
+  font-weight:
+    700;
+
+  text-transform:
+    uppercase;
+
+  letter-spacing:
+    0.04em;
+}
+
+.test-result-item strong {
+  position:
+    relative;
+
+  z-index:
+    1;
+
+  font-size:
+    1.6rem;
+
+  font-variant-numeric:
+    tabular-nums;
+}
+
+
+/* =========================================================
+   ERROR ANIMATION
+========================================================= */
+
+@keyframes qpaTestErrorIn {
+  from {
+    opacity:
+      0;
+
+    transform:
+      translateY(-5px);
+  }
+
+  to {
+    opacity:
+      1;
+
+    transform:
+      translateY(0);
+  }
+}
+
+
+/* =========================================================
+   STATE ICON ANIMATION
+========================================================= */
+
+@keyframes qpaTestStateIcon {
+  0%,
+  100% {
+    transform:
+      translateY(0);
+  }
+
+  50% {
+    transform:
+      translateY(-3px);
+  }
+}
+
+
+/* =========================================================
+   TABLET / MOBILE
+========================================================= */
+
+@media (max-width: 700px) {
+
+  .test-engine-page {
+    padding-top:
+      5.5rem;
+  }
+
+  .test-header {
+    align-items:
+      flex-start;
+
+    flex-direction:
+      column;
+
+    gap:
+      1.2rem;
+  }
+
+  .test-timer {
+    width:
+      100%;
+  }
+
+  .test-start-card,
+  .test-complete-card {
+    padding:
+      2rem 1.2rem;
+
+    margin:
+      2rem auto;
+  }
+
+  .test-start-info {
+    flex-direction:
+      column;
+  }
+
+  .test-start-info div {
+    justify-content:
+      center;
+  }
+
+  .test-source-text {
+    padding:
+      1.2rem;
+
+    font-size:
+      0.95rem;
+  }
+
+  .test-input-footer {
+    align-items:
+      stretch;
+
+    flex-direction:
+      column;
+  }
+
+  .test-input-footer .qpa-btn {
+    width:
+      100%;
+
+    justify-content:
+      center;
+  }
+
+  .test-result-card {
+    margin:
+      2rem auto;
+  }
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 650px) {
+
+  .test-result-card {
+    padding:
+      2rem 1rem;
+  }
+
+  .test-result-grid {
+    grid-template-columns:
+      repeat(2, 1fr);
+  }
+
+  .test-start-icon,
+  .test-complete-icon {
+    width:
+      64px;
+
+    height:
+      64px;
+
+    border-radius:
+      19px;
+  }
+
+  .test-complete-icon {
+    border-radius:
+      50%;
+  }
+
+  .test-start-card h2,
+  .test-complete-card h2 {
+    font-size:
+      1.4rem;
+  }
+}
+
+
+/* =========================================================
+   VERY SMALL MOBILE
+========================================================= */
+
+@media (max-width: 480px) {
+
+  .test-engine-page {
+    padding-bottom:
+      3.5rem;
+  }
+
+  .test-header h1 {
+    font-size:
+      1.7rem;
+  }
+
+  .test-header p {
+    font-size:
+      0.88rem;
+  }
+
+  .test-timer {
+    min-width:
+      0;
+
+    padding:
+      0.85rem 1rem;
+  }
+
+  .test-start-card,
+  .test-complete-card {
+    padding:
+      1.8rem 1rem;
+
+    border-radius:
+      var(--qpa-radius-md);
+  }
+
+  .test-start-info {
+    gap:
+      0.6rem;
+
+    margin-bottom:
+      1.5rem;
+  }
+
+  .test-source-header {
+    padding:
+      0.8rem 1rem;
+  }
+
+  .test-source-text {
+    padding:
+      1rem;
+
+    font-size:
+      0.9rem;
+
+    line-height:
+      1.85;
+  }
+
+  .test-input-card {
+    padding:
+      0.9rem;
+  }
+
+  .test-input-card textarea {
+    min-height:
+      210px;
+
+    padding:
+      1rem;
+
+    font-size:
+      0.9rem;
+  }
+
+  .test-result-grid {
+    gap:
+      0.7rem;
+  }
+
+  .test-result-item {
+    padding:
+      1rem 0.75rem;
+  }
+
+  .test-result-item strong {
+    font-size:
+      1.35rem;
+  }
+
+  .test-complete-actions {
+    flex-direction:
+      column;
+  }
+
+  .test-complete-actions .qpa-btn {
+    width:
+      100%;
+
+    justify-content:
+      center;
+  }
+}
+
+
+/* =========================================================
+   EXTRA SMALL MOBILE
+========================================================= */
+
+@media (max-width: 360px) {
+
+  .test-engine-page {
+    padding-top:
+      5rem;
+  }
+
+  .test-header h1 {
+    font-size:
+      1.55rem;
+  }
+
+  .test-start-card,
+  .test-complete-card {
+    padding:
+      1.5rem 0.85rem;
+  }
+
+  .test-start-icon,
+  .test-complete-icon {
+    width:
+      58px;
+
+    height:
+      58px;
+
+    font-size:
+      1.45rem;
+  }
+
+  .test-start-info div {
+    padding:
+      0.6rem 0.7rem;
+
+    font-size:
+      0.7rem;
+  }
+
+  .test-source-text {
+    padding:
+      0.9rem;
+
+    font-size:
+      0.86rem;
+  }
+
+  .test-input-card textarea {
+    min-height:
+      190px;
+  }
+
+  .test-result-card {
+    padding:
+      1.6rem 0.7rem;
+  }
+
+  .test-result-item {
+    padding:
+      0.85rem 0.55rem;
+  }
+
+  .test-result-item span {
+    font-size:
+      0.64rem;
+  }
+
+  .test-result-item strong {
+    font-size:
+      1.18rem;
+  }
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .test-back,
+  .test-timer,
+  .test-timer::before,
+  .test-start-card,
+  .test-complete-card,
+  .test-start-icon,
+  .test-complete-icon,
+  .test-badge,
+  .test-start-info div,
+  .test-source-card,
+  .test-input-card,
+  .test-input-card textarea,
+  .test-result-card,
+  .test-result-item,
+  .test-result-item::after,
+  .test-state-icon {
+    transition:
+      none;
+  }
+
+  .test-back:hover,
+  .test-timer:hover,
+  .test-start-card:hover,
+  .test-complete-card:hover,
+  .test-start-card:hover .test-start-icon,
+  .test-complete-card:hover .test-complete-icon,
+  .test-start-info div:hover,
+  .test-result-card:hover,
+  .test-result-item:hover {
+    transform:
+      none;
+  }
+
+  .test-timer:hover::before,
+  .test-result-item:hover::after {
+    display:
+      none;
+  }
+
+  .test-error,
+  .test-state-icon {
+    animation:
+      none;
+  }
+}

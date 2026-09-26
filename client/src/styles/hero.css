@@ -1,0 +1,1692 @@
+/* =========================================================
+   QPA HERO
+   Part 5
+   Part 38 — Responsive + Animation + UI/UX Polish
+   ========================================================= */
+
+
+/* =========================================================
+   HERO SECTION
+   ========================================================= */
+
+.qpa-hero {
+  position: relative;
+
+  min-height: calc(100vh - 100px);
+
+  display: flex;
+  align-items: center;
+
+  padding: 90px 0 110px;
+
+  overflow: hidden;
+
+  isolation: isolate;
+}
+
+
+/* =========================================================
+   BACKGROUND GLOWS
+   ========================================================= */
+
+.qpa-hero-glow {
+  position: absolute;
+
+  border-radius: 50%;
+
+  pointer-events: none;
+
+  z-index: -1;
+
+  filter: blur(2px);
+
+  will-change: transform;
+}
+
+.qpa-hero-glow-one {
+  width: 500px;
+  height: 500px;
+
+  top: -220px;
+  right: -130px;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(99, 91, 255, 0.15),
+      transparent 68%
+    );
+
+  animation:
+    qpa-pulse 6s ease-in-out infinite,
+    qpa-hero-glow-float-one 11s ease-in-out infinite;
+}
+
+.qpa-hero-glow-two {
+  width: 420px;
+  height: 420px;
+
+  bottom: -240px;
+  left: -180px;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(79, 156, 255, 0.12),
+      transparent 68%
+    );
+
+  animation:
+    qpa-pulse 7s ease-in-out infinite reverse,
+    qpa-hero-glow-float-two 13s ease-in-out infinite;
+}
+
+@keyframes qpa-hero-glow-float-one {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  50% {
+    transform: translate3d(-20px, 18px, 0) scale(1.06);
+  }
+}
+
+@keyframes qpa-hero-glow-float-two {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  50% {
+    transform: translate3d(22px, -16px, 0) scale(1.07);
+  }
+}
+
+
+/* =========================================================
+   HERO GRID
+   ========================================================= */
+
+.qpa-hero-grid {
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1.03fr)
+    minmax(440px, 0.97fr);
+
+  align-items: center;
+
+  gap: 70px;
+}
+
+
+/* =========================================================
+   HERO CONTENT
+   ========================================================= */
+
+.qpa-hero-content {
+  position: relative;
+
+  z-index: 2;
+
+  max-width: 690px;
+}
+
+
+/* =========================================================
+   EYEBROW
+   ========================================================= */
+
+.qpa-hero-eyebrow {
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 9px;
+
+  min-height: 34px;
+
+  padding: 0 13px;
+
+  margin-bottom: 24px;
+
+  border:
+    1px solid
+    rgba(99, 91, 255, 0.14);
+
+  border-radius:
+    var(--qpa-radius-pill);
+
+  color:
+    var(--qpa-primary);
+
+  background:
+    rgba(99, 91, 255, 0.055);
+
+  box-shadow:
+    0 8px 25px
+    rgba(99, 91, 255, 0.045);
+
+  font-size: 0.74rem;
+
+  font-weight: 800;
+
+  letter-spacing: 0.1em;
+
+  text-transform: uppercase;
+
+  transition:
+    transform var(--qpa-fast),
+    border-color var(--qpa-fast),
+    background var(--qpa-fast),
+    box-shadow var(--qpa-fast);
+}
+
+.qpa-hero-eyebrow:hover {
+  transform: translateY(-2px);
+
+  border-color:
+    rgba(99, 91, 255, 0.25);
+
+  background:
+    rgba(99, 91, 255, 0.075);
+
+  box-shadow:
+    0 12px 30px
+    rgba(99, 91, 255, 0.08);
+}
+
+.qpa-hero-eyebrow-dot {
+  width: 7px;
+  height: 7px;
+
+  flex: 0 0 auto;
+
+  border-radius: 50%;
+
+  background:
+    var(--qpa-primary);
+
+  box-shadow:
+    0 0 0 5px
+    rgba(99, 91, 255, 0.08);
+
+  animation:
+    qpa-pulse 2.4s ease-in-out infinite;
+}
+
+
+/* =========================================================
+   HERO TITLE
+   ========================================================= */
+
+.qpa-hero-title {
+  max-width: 750px;
+
+  font-size:
+    clamp(3.2rem, 6vw, 6.1rem);
+
+  line-height: 0.99;
+
+  letter-spacing: -0.055em;
+
+  text-wrap: balance;
+
+  animation-delay: 80ms;
+}
+
+
+/* =========================================================
+   HERO DESCRIPTION
+   ========================================================= */
+
+.qpa-hero-description {
+  max-width: 600px;
+
+  margin-top: 28px;
+
+  color:
+    var(--qpa-text-secondary);
+
+  font-size:
+    clamp(1rem, 1.5vw, 1.13rem);
+
+  line-height: 1.75;
+
+  text-wrap: pretty;
+
+  animation-delay: 150ms;
+}
+
+
+/* =========================================================
+   HERO ACTIONS
+   ========================================================= */
+
+.qpa-hero-actions {
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  flex-wrap: wrap;
+
+  margin-top: 34px;
+
+  animation-delay: 220ms;
+}
+
+.qpa-hero-primary-btn,
+.qpa-hero-secondary-btn {
+  position: relative;
+
+  overflow: hidden;
+
+  min-height: 54px;
+
+  transition:
+    transform var(--qpa-fast),
+    box-shadow var(--qpa-fast),
+    border-color var(--qpa-fast);
+}
+
+.qpa-hero-primary-btn {
+  padding: 0 24px;
+}
+
+.qpa-hero-secondary-btn {
+  padding: 0 23px;
+}
+
+.qpa-hero-primary-btn::after,
+.qpa-hero-secondary-btn::after {
+  content: "";
+
+  position: absolute;
+
+  top: 0;
+  left: -120%;
+
+  width: 80%;
+  height: 100%;
+
+  background:
+    linear-gradient(
+      105deg,
+      transparent,
+      rgba(255, 255, 255, 0.24),
+      transparent
+    );
+
+  transform: skewX(-18deg);
+
+  transition:
+    left 650ms ease;
+
+  pointer-events: none;
+}
+
+.qpa-hero-primary-btn:hover,
+.qpa-hero-secondary-btn:hover {
+  transform: translateY(-3px);
+}
+
+.qpa-hero-primary-btn:hover::after,
+.qpa-hero-secondary-btn:hover::after {
+  left: 135%;
+}
+
+.qpa-hero-primary-btn:active,
+.qpa-hero-secondary-btn:active {
+  transform: translateY(-1px) scale(0.985);
+}
+
+.qpa-hero-primary-btn:focus-visible,
+.qpa-hero-secondary-btn:focus-visible {
+  outline:
+    3px solid
+    rgba(99, 91, 255, 0.25);
+
+  outline-offset: 4px;
+}
+
+.qpa-hero-primary-btn span {
+  display: inline-flex;
+
+  transition:
+    transform var(--qpa-fast);
+}
+
+.qpa-hero-primary-btn:hover span {
+  transform:
+    translateX(4px);
+}
+
+
+/* =========================================================
+   TRUST AREA
+   ========================================================= */
+
+.qpa-hero-trust {
+  display: flex;
+
+  align-items: center;
+
+  gap: 13px;
+
+  margin-top: 38px;
+}
+
+.qpa-trust-avatars {
+  display: flex;
+
+  align-items: center;
+}
+
+.qpa-trust-avatars span {
+  width: 32px;
+  height: 32px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  margin-left: -7px;
+
+  border:
+    2px solid
+    #ffffff;
+
+  border-radius: 50%;
+
+  color: #ffffff;
+
+  background:
+    var(--qpa-gradient-primary);
+
+  font-size: 0.65rem;
+
+  font-weight: 800;
+
+  box-shadow:
+    var(--qpa-shadow-xs);
+
+  transition:
+    transform var(--qpa-fast),
+    box-shadow var(--qpa-fast);
+}
+
+.qpa-trust-avatars span:first-child {
+  margin-left: 0;
+}
+
+.qpa-trust-avatars span:nth-child(2) {
+  background:
+    linear-gradient(
+      135deg,
+      #4f9cff,
+      #635bff
+    );
+}
+
+.qpa-trust-avatars span:nth-child(3) {
+  background:
+    linear-gradient(
+      135deg,
+      #8b5cf6,
+      #635bff
+    );
+}
+
+.qpa-trust-avatars:hover span {
+  transform: translateY(-3px);
+}
+
+.qpa-trust-avatars:hover span:nth-child(2) {
+  transform: translateY(-5px);
+}
+
+.qpa-trust-avatars:hover span:nth-child(3) {
+  transform: translateY(-7px);
+}
+
+.qpa-trust-text {
+  display: flex;
+
+  flex-direction: column;
+
+  line-height: 1.3;
+}
+
+.qpa-trust-text strong {
+  color:
+    var(--qpa-text);
+
+  font-size: 0.78rem;
+}
+
+.qpa-trust-text span {
+  margin-top: 2px;
+
+  color:
+    var(--qpa-text-muted);
+
+  font-size: 0.72rem;
+}
+
+
+/* =========================================================
+   HERO VISUAL
+   ========================================================= */
+
+.qpa-hero-visual {
+  position: relative;
+
+  min-height: 570px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  perspective: 1200px;
+}
+
+
+/* =========================================================
+   ORBIT
+   ========================================================= */
+
+.qpa-hero-orbit {
+  position: absolute;
+
+  width: 430px;
+  height: 430px;
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(99, 91, 255, 0.09),
+      rgba(139, 92, 246, 0.035) 45%,
+      transparent 70%
+    );
+
+  filter: blur(1px);
+
+  pointer-events: none;
+
+  animation:
+    qpa-hero-orbit-float 8s ease-in-out infinite;
+}
+
+@keyframes qpa-hero-orbit-float {
+  0%,
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
+
+  50% {
+    transform: scale(1.035) rotate(3deg);
+  }
+}
+
+
+/* =========================================================
+   DASHBOARD CARD
+   ========================================================= */
+
+.qpa-hero-dashboard {
+  position: relative;
+
+  width: min(
+    100%,
+    470px
+  );
+
+  padding: 30px;
+
+  border:
+    1px solid
+    rgba(255, 255, 255, 0.82);
+
+  border-radius: 30px;
+
+  background:
+    rgba(255, 255, 255, 0.88);
+
+  box-shadow:
+    0 35px 90px
+    rgba(42, 42, 70, 0.14),
+    0 10px 30px
+    rgba(99, 91, 255, 0.05);
+
+  backdrop-filter:
+    blur(22px);
+
+  -webkit-backdrop-filter:
+    blur(22px);
+
+  z-index: 2;
+
+  transform-style: preserve-3d;
+
+  animation:
+    qpa-hero-dashboard-float 6s ease-in-out infinite;
+
+  transition:
+    transform 500ms ease,
+    box-shadow 500ms ease,
+    border-color 500ms ease;
+}
+
+.qpa-hero-dashboard::before {
+  content: "";
+
+  position: absolute;
+
+  inset: 0;
+
+  border-radius: inherit;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.38),
+      transparent 35%,
+      transparent 70%,
+      rgba(99, 91, 255, 0.045)
+    );
+
+  pointer-events: none;
+}
+
+.qpa-hero-dashboard:hover {
+  transform:
+    translateY(-7px)
+    rotateX(1deg)
+    rotateY(-1deg);
+
+  border-color:
+    rgba(255, 255, 255, 0.98);
+
+  box-shadow:
+    0 42px 100px
+    rgba(42, 42, 70, 0.17),
+    0 15px 40px
+    rgba(99, 91, 255, 0.07);
+}
+
+@keyframes qpa-hero-dashboard-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-7px);
+  }
+}
+
+
+/* =========================================================
+   DASHBOARD TOP
+   ========================================================= */
+
+.qpa-dashboard-top {
+  display: flex;
+
+  align-items: flex-start;
+
+  justify-content: space-between;
+
+  gap: 15px;
+}
+
+.qpa-dashboard-label {
+  display: block;
+
+  margin-bottom: 6px;
+
+  color:
+    var(--qpa-text-muted);
+
+  font-size: 0.65rem;
+
+  font-weight: 800;
+
+  letter-spacing: 0.1em;
+}
+
+.qpa-dashboard-top h3 {
+  font-size: 1.15rem;
+
+  letter-spacing: -0.025em;
+}
+
+.qpa-dashboard-status {
+  padding:
+    5px 9px;
+
+  border-radius:
+    var(--qpa-radius-pill);
+
+  color:
+    #16845b;
+
+  background:
+    rgba(22, 132, 91, 0.08);
+
+  font-size: 0.65rem;
+
+  font-weight: 700;
+
+  transition:
+    transform var(--qpa-fast),
+    background var(--qpa-fast);
+}
+
+.qpa-dashboard-status:hover {
+  transform: translateY(-2px);
+
+  background:
+    rgba(22, 132, 91, 0.12);
+}
+
+
+/* =========================================================
+   SPEED
+   ========================================================= */
+
+.qpa-speed-display {
+  display: flex;
+
+  align-items: flex-end;
+
+  gap: 13px;
+
+  margin-top: 35px;
+}
+
+.qpa-speed-number {
+  color:
+    var(--qpa-text);
+
+  font-family:
+    "Manrope",
+    sans-serif;
+
+  font-size: 4.1rem;
+
+  font-weight: 800;
+
+  line-height: 0.9;
+
+  letter-spacing: -0.06em;
+
+  transition:
+    transform var(--qpa-fast);
+}
+
+.qpa-hero-dashboard:hover .qpa-speed-number {
+  transform: translateX(2px);
+}
+
+.qpa-speed-number span {
+  margin-left: 7px;
+
+  color:
+    var(--qpa-text-muted);
+
+  font-size: 0.8rem;
+
+  font-weight: 700;
+
+  letter-spacing: 0;
+}
+
+.qpa-speed-change {
+  margin-bottom: 5px;
+
+  padding:
+    5px 9px;
+
+  border-radius:
+    var(--qpa-radius-pill);
+
+  color:
+    #16845b;
+
+  background:
+    rgba(22, 132, 91, 0.08);
+
+  font-size: 0.68rem;
+
+  font-weight: 800;
+}
+
+
+/* =========================================================
+   MINI CHART
+   ========================================================= */
+
+.qpa-mini-chart {
+  height: 150px;
+
+  display: flex;
+
+  align-items: flex-end;
+
+  gap: 9px;
+
+  padding:
+    20px 0 12px;
+
+  border-bottom:
+    1px solid
+    var(--qpa-border);
+}
+
+.qpa-mini-chart span {
+  flex: 1;
+
+  min-width: 5px;
+
+  border-radius:
+    7px 7px 3px 3px;
+
+  background:
+    linear-gradient(
+      to top,
+      rgba(99, 91, 255, 0.2),
+      rgba(99, 91, 255, 0.9)
+    );
+
+  transform-origin:
+    bottom;
+
+  animation:
+    qpa-chart-grow 900ms ease both;
+
+  transition:
+    filter var(--qpa-fast),
+    transform var(--qpa-fast);
+}
+
+.qpa-mini-chart:hover span {
+  filter:
+    saturate(1.15);
+}
+
+.qpa-mini-chart span:hover {
+  transform:
+    scaleY(1.025)
+    translateY(-2px);
+}
+
+.qpa-mini-chart span:nth-child(2) {
+  animation-delay: 70ms;
+}
+
+.qpa-mini-chart span:nth-child(3) {
+  animation-delay: 140ms;
+}
+
+.qpa-mini-chart span:nth-child(4) {
+  animation-delay: 210ms;
+}
+
+.qpa-mini-chart span:nth-child(5) {
+  animation-delay: 280ms;
+}
+
+.qpa-mini-chart span:nth-child(6) {
+  animation-delay: 350ms;
+}
+
+.qpa-mini-chart span:nth-child(7) {
+  animation-delay: 420ms;
+}
+
+.qpa-mini-chart span:nth-child(8) {
+  animation-delay: 490ms;
+}
+
+.qpa-mini-chart span:nth-child(9) {
+  animation-delay: 560ms;
+}
+
+@keyframes qpa-chart-grow {
+  from {
+    opacity: 0;
+
+    transform:
+      scaleY(0);
+  }
+
+  to {
+    opacity: 1;
+
+    transform:
+      scaleY(1);
+  }
+}
+
+
+/* =========================================================
+   DASHBOARD STATS
+   ========================================================= */
+
+.qpa-dashboard-stats {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  gap: 9px;
+
+  margin-top: 18px;
+}
+
+.qpa-dashboard-stat {
+  padding:
+    13px;
+
+  border-radius:
+    14px;
+
+  background:
+    var(--qpa-bg-soft);
+
+  transition:
+    transform var(--qpa-fast),
+    background var(--qpa-fast),
+    box-shadow var(--qpa-fast);
+}
+
+.qpa-dashboard-stat:hover {
+  transform: translateY(-3px);
+
+  background:
+    rgba(99, 91, 255, 0.055);
+
+  box-shadow:
+    0 10px 24px
+    rgba(42, 42, 70, 0.055);
+}
+
+.qpa-dashboard-stat span {
+  display: block;
+
+  color:
+    var(--qpa-text-muted);
+
+  font-size: 0.63rem;
+
+  font-weight: 600;
+}
+
+.qpa-dashboard-stat strong {
+  display: block;
+
+  margin-top: 3px;
+
+  color:
+    var(--qpa-text);
+
+  font-size: 0.86rem;
+
+  font-weight: 800;
+}
+
+
+/* =========================================================
+   COURSE PROGRESS
+   ========================================================= */
+
+.qpa-progress-block {
+  margin-top: 20px;
+}
+
+.qpa-progress-heading {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  margin-bottom: 8px;
+
+  color:
+    var(--qpa-text-secondary);
+
+  font-size: 0.68rem;
+
+  font-weight: 600;
+}
+
+.qpa-progress-heading strong {
+  color:
+    var(--qpa-primary);
+}
+
+.qpa-progress-track {
+  height: 7px;
+
+  overflow: hidden;
+
+  border-radius:
+    var(--qpa-radius-pill);
+
+  background:
+    rgba(99, 91, 255, 0.09);
+}
+
+.qpa-progress-value {
+  width: 0;
+  height: 100%;
+
+  border-radius:
+    inherit;
+
+  background:
+    var(--qpa-gradient-primary);
+
+  box-shadow:
+    0 0 14px
+    rgba(99, 91, 255, 0.16);
+
+  animation:
+    qpa-progress-grow 1.2s ease both;
+}
+
+@keyframes qpa-progress-grow {
+  from {
+    width: 0;
+  }
+
+  to {
+    width: 100;
+  }
+}
+
+
+/* =========================================================
+   FLOATING CARDS
+   ========================================================= */
+
+.qpa-floating-card {
+  position: absolute;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 11px;
+
+  padding:
+    13px 15px;
+
+  border:
+    1px solid
+    rgba(255, 255, 255, 0.85);
+
+  border-radius:
+    17px;
+
+  background:
+    rgba(255, 255, 255, 0.88);
+
+  box-shadow:
+    0 18px 45px
+    rgba(30, 30, 55, 0.11);
+
+  backdrop-filter:
+    blur(18px);
+
+  -webkit-backdrop-filter:
+    blur(18px);
+
+  z-index: 3;
+
+  transition:
+    transform 450ms ease,
+    box-shadow 450ms ease,
+    border-color 450ms ease;
+}
+
+.qpa-floating-card::after {
+  content: "";
+
+  position: absolute;
+
+  inset: 0;
+
+  border-radius: inherit;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.24),
+      transparent 50%
+    );
+
+  pointer-events: none;
+}
+
+.qpa-floating-card:hover {
+  border-color:
+    rgba(255, 255, 255, 1);
+
+  box-shadow:
+    0 24px 55px
+    rgba(30, 30, 55, 0.14);
+}
+
+.qpa-floating-card strong {
+  display: block;
+
+  color:
+    var(--qpa-text);
+
+  font-size: 0.82rem;
+
+  font-weight: 800;
+}
+
+.qpa-floating-card span {
+  display: block;
+
+  margin-top: 2px;
+
+  color:
+    var(--qpa-text-muted);
+
+  font-size: 0.62rem;
+}
+
+.qpa-floating-top {
+  top: 75px;
+  right: -10px;
+
+  animation:
+    qpa-floating-top 5.5s ease-in-out infinite;
+}
+
+.qpa-floating-top:hover {
+  animation-play-state: paused;
+
+  transform:
+    translateY(-5px);
+}
+
+.qpa-floating-bottom {
+  bottom: 70px;
+  left: -15px;
+
+  animation:
+    qpa-floating-bottom 6.5s ease-in-out infinite;
+}
+
+.qpa-floating-bottom:hover {
+  animation-play-state: paused;
+
+  transform:
+    translateY(-5px);
+}
+
+@keyframes qpa-floating-top {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+
+  50% {
+    transform: translate3d(0, -9px, 0);
+  }
+}
+
+@keyframes qpa-floating-bottom {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+
+  50% {
+    transform: translate3d(0, 9px, 0);
+  }
+}
+
+.qpa-floating-icon {
+  width: 34px;
+  height: 34px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  flex: 0 0 auto;
+
+  border-radius:
+    11px;
+
+  color:
+    var(--qpa-primary);
+
+  background:
+    rgba(99, 91, 255, 0.09);
+
+  font-size: 1rem;
+
+  font-weight: 800;
+
+  transition:
+    transform var(--qpa-fast),
+    background var(--qpa-fast);
+}
+
+.qpa-floating-card:hover .qpa-floating-icon {
+  transform:
+    rotate(-6deg)
+    scale(1.06);
+
+  background:
+    rgba(99, 91, 255, 0.13);
+}
+
+.qpa-floating-ranking {
+  width: 38px;
+  height: 38px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  flex: 0 0 auto;
+
+  border-radius:
+    12px;
+
+  color: #ffffff;
+
+  background:
+    var(--qpa-gradient-primary);
+
+  font-family:
+    "Manrope",
+    sans-serif;
+
+  font-size: 0.72rem;
+
+  font-weight: 800;
+
+  box-shadow:
+    0 8px 18px
+    rgba(99, 91, 255, 0.2);
+
+  transition:
+    transform var(--qpa-fast),
+    box-shadow var(--qpa-fast);
+}
+
+.qpa-floating-card:hover .qpa-floating-ranking {
+  transform:
+    scale(1.06)
+    rotate(3deg);
+
+  box-shadow:
+    0 11px 24px
+    rgba(99, 91, 255, 0.27);
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 1050px) {
+  .qpa-hero {
+    min-height: auto;
+  }
+
+  .qpa-hero-grid {
+    grid-template-columns: 1fr;
+
+    gap: 65px;
+  }
+
+  .qpa-hero-content {
+    max-width: 760px;
+
+    margin-inline: auto;
+
+    text-align: center;
+  }
+
+  .qpa-hero-eyebrow {
+    margin-inline: auto;
+  }
+
+  .qpa-hero-description {
+    margin-inline: auto;
+  }
+
+  .qpa-hero-actions {
+    justify-content: center;
+  }
+
+  .qpa-hero-trust {
+    justify-content: center;
+  }
+
+  .qpa-hero-visual {
+    min-height: 560px;
+  }
+
+  .qpa-hero-dashboard {
+    max-width: 470px;
+  }
+}
+
+
+/* =========================================================
+   TABLET / SMALL LAPTOP
+   ========================================================= */
+
+@media (max-width: 820px) {
+  .qpa-hero {
+    padding:
+      75px 0 90px;
+  }
+
+  .qpa-hero-grid {
+    gap: 48px;
+  }
+
+  .qpa-hero-title {
+    font-size:
+      clamp(3rem, 9vw, 5rem);
+  }
+
+  .qpa-hero-visual {
+    min-height: 520px;
+  }
+
+  .qpa-hero-orbit {
+    width: 390px;
+    height: 390px;
+  }
+
+  .qpa-floating-top {
+    right: 2px;
+  }
+
+  .qpa-floating-bottom {
+    left: 2px;
+  }
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 760px) {
+  .qpa-hero {
+    min-height: auto;
+
+    padding:
+      65px 0 75px;
+  }
+
+  .qpa-hero-title {
+    font-size:
+      clamp(2.75rem, 13vw, 4.4rem);
+
+    line-height: 1.01;
+  }
+
+  .qpa-hero-description {
+    margin-top: 22px;
+
+    font-size: 0.97rem;
+
+    line-height: 1.65;
+  }
+
+  .qpa-hero-actions {
+    flex-direction: column;
+
+    align-items: stretch;
+
+    margin-top: 28px;
+  }
+
+  .qpa-hero-actions .qpa-btn {
+    width: 100%;
+  }
+
+  .qpa-hero-trust {
+    margin-top: 30px;
+
+    justify-content: flex-start;
+
+    text-align: left;
+  }
+
+  .qpa-hero-visual {
+    min-height: 460px;
+
+    width: 100%;
+  }
+
+  .qpa-hero-orbit {
+    width: 330px;
+    height: 330px;
+  }
+
+  .qpa-hero-dashboard {
+    width: calc(100% - 30px);
+
+    padding: 22px;
+
+    border-radius: 24px;
+  }
+
+  .qpa-speed-display {
+    margin-top: 28px;
+  }
+
+  .qpa-speed-number {
+    font-size: 3.25rem;
+  }
+
+  .qpa-mini-chart {
+    height: 125px;
+
+    gap: 6px;
+  }
+
+  .qpa-floating-top {
+    top: 20px;
+    right: 0;
+  }
+
+  .qpa-floating-bottom {
+    bottom: 25px;
+    left: 0;
+  }
+
+  .qpa-floating-card {
+    padding:
+      11px 12px;
+  }
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 430px) {
+  .qpa-hero {
+    padding:
+      55px 0 65px;
+  }
+
+  .qpa-hero-eyebrow {
+    min-height: 31px;
+
+    padding-inline: 10px;
+
+    gap: 7px;
+
+    font-size: 0.64rem;
+
+    letter-spacing: 0.075em;
+  }
+
+  .qpa-hero-title {
+    font-size:
+      clamp(2.45rem, 14vw, 3.5rem);
+  }
+
+  .qpa-hero-description {
+    font-size: 0.93rem;
+  }
+
+  .qpa-hero-visual {
+    min-height: 400px;
+  }
+
+  .qpa-hero-orbit {
+    width: 285px;
+    height: 285px;
+  }
+
+  .qpa-hero-dashboard {
+    width: calc(100% - 18px);
+
+    padding: 18px;
+
+    border-radius: 21px;
+  }
+
+  .qpa-dashboard-top {
+    gap: 9px;
+  }
+
+  .qpa-dashboard-top h3 {
+    font-size: 1rem;
+  }
+
+  .qpa-speed-display {
+    gap: 8px;
+  }
+
+  .qpa-speed-number {
+    font-size: 2.75rem;
+  }
+
+  .qpa-speed-number span {
+    margin-left: 4px;
+
+    font-size: 0.68rem;
+  }
+
+  .qpa-speed-change {
+    padding:
+      4px 7px;
+
+    font-size: 0.61rem;
+  }
+
+  .qpa-dashboard-stats {
+    gap: 6px;
+  }
+
+  .qpa-dashboard-stat {
+    padding: 10px;
+  }
+
+  .qpa-dashboard-stat strong {
+    font-size: 0.74rem;
+  }
+
+  .qpa-floating-card {
+    transform: scale(0.88);
+  }
+
+  .qpa-floating-card:hover {
+    transform:
+      scale(0.88)
+      translateY(-4px);
+  }
+
+  .qpa-floating-top {
+    right: -12px;
+  }
+
+  .qpa-floating-bottom {
+    left: -12px;
+  }
+}
+
+
+/* =========================================================
+   VERY SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 360px) {
+  .qpa-hero {
+    padding:
+      48px 0 58px;
+  }
+
+  .qpa-hero-title {
+    font-size:
+      2.3rem;
+
+    letter-spacing: -0.045em;
+  }
+
+  .qpa-hero-description {
+    font-size: 0.9rem;
+  }
+
+  .qpa-hero-trust {
+    gap: 9px;
+  }
+
+  .qpa-trust-avatars span {
+    width: 29px;
+    height: 29px;
+
+    margin-left: -6px;
+  }
+
+  .qpa-trust-text strong {
+    font-size: 0.72rem;
+  }
+
+  .qpa-trust-text span {
+    font-size: 0.66rem;
+  }
+
+  .qpa-hero-visual {
+    min-height: 370px;
+  }
+
+  .qpa-hero-dashboard {
+    width: calc(100% - 8px);
+
+    padding: 15px;
+  }
+
+  .qpa-dashboard-stats {
+    grid-template-columns:
+      repeat(3, minmax(0, 1fr));
+  }
+
+  .qpa-dashboard-stat {
+    padding: 8px;
+  }
+
+  .qpa-dashboard-stat span {
+    font-size: 0.56rem;
+  }
+
+  .qpa-dashboard-stat strong {
+    font-size: 0.68rem;
+  }
+
+  .qpa-floating-card {
+    transform: scale(0.76);
+  }
+
+  .qpa-floating-card:hover {
+    transform:
+      scale(0.76)
+      translateY(-4px);
+  }
+
+  .qpa-floating-top {
+    right: -22px;
+  }
+
+  .qpa-floating-bottom {
+    left: -22px;
+  }
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .qpa-hero-glow-one,
+  .qpa-hero-glow-two,
+  .qpa-hero-eyebrow-dot,
+  .qpa-hero-orbit,
+  .qpa-hero-dashboard,
+  .qpa-floating-top,
+  .qpa-floating-bottom,
+  .qpa-mini-chart span,
+  .qpa-progress-value {
+    animation: none !important;
+  }
+
+  .qpa-hero-primary-btn,
+  .qpa-hero-secondary-btn,
+  .qpa-hero-dashboard,
+  .qpa-floating-card,
+  .qpa-dashboard-stat,
+  .qpa-floating-icon,
+  .qpa-floating-ranking,
+  .qpa-trust-avatars span {
+    transition: none !important;
+  }
+
+  .qpa-hero-primary-btn::after,
+  .qpa-hero-secondary-btn::after {
+    display: none;
+  }
+}
+
+/* Paste at the bottom of your hero CSS file. */
+
+/* The leaderboard card is now a link: keep it looking like a card */
+a.qpa-floating-link {
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+a.qpa-floating-link:hover {
+  transform: translateY(-3px);
+}
+
+a.qpa-floating-link:focus-visible {
+  outline: 2px solid var(--qpa-primary, #6366f1);
+  outline-offset: 3px;
+}
+
+/* Course name shown under "Course progress" */
+.qpa-progress-course {
+  display: block;
+  margin: -2px 0 8px;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--qpa-text-muted, #64748b);
+  font-size: 0.78rem;
+}

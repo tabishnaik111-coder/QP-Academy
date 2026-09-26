@@ -1,0 +1,1821 @@
+/* =========================================================
+   QPA LEARNING PAGE
+   Part 19
+   Part 38 — Responsive + Animation + UI/UX Polish
+   ========================================================= */
+
+
+/* =========================================================
+   LEARNING PAGE
+   ========================================================= */
+
+.learning-page {
+  min-height: 80vh;
+
+  padding: 7rem 0 5rem;
+
+  background:
+    var(--qpa-background);
+
+  overflow: hidden;
+}
+
+
+/* =========================================================
+   TOP BAR
+   ========================================================= */
+
+.learning-topbar {
+  display: flex;
+
+  align-items: flex-end;
+  justify-content: space-between;
+
+  gap: 2rem;
+
+  margin-bottom: 2rem;
+}
+
+.learning-back {
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 0.45rem;
+
+  margin-bottom: 0.8rem;
+
+  color:
+    var(--qpa-primary);
+
+  font-size: 0.82rem;
+
+  font-weight: 700;
+
+  transition:
+    color var(--qpa-fast),
+    transform var(--qpa-fast);
+}
+
+.learning-back:hover {
+  color:
+    var(--qpa-primary);
+
+  transform:
+    translateX(-3px);
+}
+
+.learning-back:focus-visible {
+  outline:
+    3px solid
+    rgba(109, 93, 252, 0.22);
+
+  outline-offset: 4px;
+
+  border-radius: 6px;
+}
+
+.learning-topbar h1 {
+  margin: 0;
+
+  font-size:
+    clamp(1.7rem, 3vw, 2.5rem);
+
+  line-height: 1.12;
+
+  letter-spacing: -0.035em;
+
+  text-wrap: balance;
+}
+
+
+/* =========================================================
+   LEARNING PROGRESS
+   ========================================================= */
+
+.learning-progress {
+  width: 280px;
+}
+
+.learning-progress-label {
+  display: flex;
+
+  justify-content: space-between;
+
+  margin-bottom: 0.45rem;
+
+  color:
+    var(--qpa-text-muted);
+
+  font-size: 0.75rem;
+}
+
+.learning-progress-label strong {
+  color:
+    var(--qpa-text);
+
+  font-weight: 800;
+}
+
+.learning-progress-track {
+  height: 8px;
+
+  overflow: hidden;
+
+  border-radius: 999px;
+
+  background:
+    var(--qpa-border);
+
+  box-shadow:
+    inset 0 1px 2px
+    rgba(20, 20, 40, 0.04);
+}
+
+.learning-progress-fill {
+  height: 100%;
+
+  border-radius: inherit;
+
+  background:
+    var(--qpa-gradient);
+
+  box-shadow:
+    0 0 14px
+    rgba(109, 93, 252, 0.16);
+
+  transition:
+    width 500ms ease;
+}
+
+
+/* =========================================================
+   MAIN LEARNING LAYOUT
+   ========================================================= */
+
+.learning-layout {
+  display: grid;
+
+  grid-template-columns:
+    310px minmax(0, 1fr);
+
+  gap: 1.5rem;
+
+  align-items: start;
+}
+
+
+/* =========================================================
+   SIDEBAR
+   ========================================================= */
+
+.learning-sidebar {
+  position: sticky;
+
+  top: 6rem;
+
+  overflow: hidden;
+
+  border:
+    1px solid
+    var(--qpa-border);
+
+  border-radius:
+    var(--qpa-radius-lg);
+
+  background:
+    var(--qpa-surface);
+
+  box-shadow:
+    var(--qpa-shadow);
+
+  transition:
+    box-shadow var(--qpa-transition),
+    border-color var(--qpa-transition);
+}
+
+.learning-sidebar:hover {
+  border-color:
+    rgba(109, 93, 252, 0.16);
+
+  box-shadow:
+    0 18px 45px
+    rgba(42, 42, 70, 0.08);
+}
+
+.learning-sidebar-header {
+  display: flex;
+
+  justify-content: space-between;
+
+  gap: 1rem;
+
+  padding: 1.1rem;
+
+  border-bottom:
+    1px solid
+    var(--qpa-border);
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(109, 93, 252, 0.035),
+      transparent
+    );
+}
+
+.learning-sidebar-header span {
+  color:
+    var(--qpa-text);
+
+  font-weight: 800;
+}
+
+.learning-sidebar-header strong {
+  color:
+    var(--qpa-text-muted);
+
+  font-size: 0.75rem;
+}
+
+
+/* =========================================================
+   MODULE LIST
+   ========================================================= */
+
+.learning-modules {
+  max-height:
+    calc(100vh - 180px);
+
+  overflow-y: auto;
+
+  overscroll-behavior:
+    contain;
+
+  scrollbar-width:
+    thin;
+}
+
+.learning-modules::-webkit-scrollbar {
+  width: 6px;
+}
+
+.learning-modules::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+
+  background:
+    rgba(109, 93, 252, 0.2);
+}
+
+.learning-modules::-webkit-scrollbar-track {
+  background:
+    transparent;
+}
+
+
+/* =========================================================
+   MODULE TITLE
+   ========================================================= */
+
+.learning-module-title {
+  display: flex;
+
+  justify-content: space-between;
+
+  gap: 1rem;
+
+  padding: 0.9rem 1rem;
+
+  background:
+    var(--qpa-surface-soft);
+
+  color:
+    var(--qpa-text);
+
+  font-size: 0.78rem;
+
+  font-weight: 800;
+
+  transition:
+    background var(--qpa-fast);
+}
+
+.learning-module-title small {
+  color:
+    var(--qpa-text-muted);
+
+  font-size: 0.7rem;
+
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   LESSONS
+   ========================================================= */
+
+.learning-lessons {
+  border-top:
+    1px solid
+    var(--qpa-border);
+}
+
+.learning-lesson {
+  position: relative;
+
+  width: 100%;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 0.65rem;
+
+  padding: 0.85rem 1rem;
+
+  border: 0;
+
+  border-bottom:
+    1px solid
+    var(--qpa-border);
+
+  background:
+    transparent;
+
+  color:
+    var(--qpa-text-muted);
+
+  text-align: left;
+
+  cursor: pointer;
+
+  transition:
+    background var(--qpa-transition),
+    color var(--qpa-transition),
+    transform var(--qpa-fast),
+    padding-left var(--qpa-fast);
+}
+
+.learning-lesson:last-child {
+  border-bottom: 0;
+}
+
+.learning-lesson:hover,
+.learning-lesson.active {
+  background:
+    rgba(109, 93, 252, 0.06);
+
+  color:
+    var(--qpa-text);
+}
+
+.learning-lesson:hover {
+  padding-left:
+    1.15rem;
+}
+
+.learning-lesson.active {
+  box-shadow:
+    inset 3px 0 0
+    var(--qpa-primary);
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(109, 93, 252, 0.085),
+      rgba(109, 93, 252, 0.025)
+    );
+}
+
+.learning-lesson:focus-visible {
+  outline:
+    3px solid
+    rgba(109, 93, 252, 0.2);
+
+  outline-offset:
+    -3px;
+
+  z-index: 1;
+}
+
+.learning-lesson-icon {
+  width: 25px;
+
+  flex:
+    0 0 auto;
+
+  color:
+    var(--qpa-primary);
+
+  text-align:
+    center;
+
+  transition:
+    transform var(--qpa-fast),
+    color var(--qpa-fast);
+}
+
+.learning-lesson:hover .learning-lesson-icon,
+.learning-lesson.active .learning-lesson-icon {
+  transform:
+    scale(1.08);
+
+  color:
+    var(--qpa-primary);
+}
+
+.learning-lesson-name {
+  min-width: 0;
+
+  overflow: hidden;
+
+  font-size: 0.78rem;
+
+  line-height: 1.4;
+
+  text-overflow:
+    ellipsis;
+}
+
+
+/* =========================================================
+   LEARNING CONTENT
+   ========================================================= */
+
+.learning-content {
+  min-width: 0;
+}
+
+.learning-content-header {
+  margin-bottom: 1.2rem;
+}
+
+.learning-type {
+  display: inline-flex;
+
+  align-items: center;
+
+  padding: 0.35rem 0.65rem;
+
+  margin-bottom: 0.7rem;
+
+  border-radius:
+    999px;
+
+  background:
+    rgba(109, 93, 252, 0.09);
+
+  color:
+    var(--qpa-primary);
+
+  font-size: 0.7rem;
+
+  font-weight: 800;
+
+  text-transform:
+    uppercase;
+
+  letter-spacing:
+    0.04em;
+
+  transition:
+    transform var(--qpa-fast),
+    background var(--qpa-fast);
+}
+
+.learning-type:hover {
+  transform:
+    translateY(-2px);
+
+  background:
+    rgba(109, 93, 252, 0.13);
+}
+
+.learning-content-header h2 {
+  margin-bottom: 0.5rem;
+
+  font-size: 1.8rem;
+
+  line-height: 1.18;
+
+  letter-spacing:
+    -0.035em;
+
+  text-wrap:
+    balance;
+}
+
+.learning-content-header p {
+  margin: 0;
+
+  color:
+    var(--qpa-text-muted);
+
+  line-height: 1.7;
+
+  text-wrap:
+    pretty;
+}
+
+
+/* =========================================================
+   CONTENT CARD
+   ========================================================= */
+
+.learning-content-card {
+  min-height: 390px;
+
+  padding: 2rem;
+
+  border:
+    1px solid
+    var(--qpa-border);
+
+  border-radius:
+    var(--qpa-radius-lg);
+
+  background:
+    var(--qpa-surface);
+
+  box-shadow:
+    var(--qpa-shadow);
+
+  transition:
+    border-color var(--qpa-transition),
+    box-shadow var(--qpa-transition),
+    transform var(--qpa-transition);
+}
+
+.learning-content-card:hover {
+  border-color:
+    rgba(109, 93, 252, 0.14);
+
+  box-shadow:
+    0 20px 50px
+    rgba(42, 42, 70, 0.075);
+
+  transform:
+    translateY(-2px);
+}
+
+
+/* =========================================================
+   TEXT CONTENT
+   ========================================================= */
+
+.learning-text-content p {
+  color:
+    var(--qpa-text-muted);
+
+  line-height: 1.9;
+
+  white-space:
+    pre-wrap;
+
+  text-wrap:
+    pretty;
+}
+
+
+/* =========================================================
+   PLACEHOLDER
+   ========================================================= */
+
+.learning-placeholder {
+  min-height: 320px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  padding: 1rem;
+
+  text-align: center;
+}
+
+.learning-placeholder i {
+  width: 64px;
+  height: 64px;
+
+  display: grid;
+
+  place-items: center;
+
+  margin-bottom: 1rem;
+
+  border-radius: 20px;
+
+  background:
+    rgba(109, 93, 252, 0.08);
+
+  color:
+    var(--qpa-primary);
+
+  font-size: 2rem;
+
+  box-shadow:
+    0 12px 30px
+    rgba(109, 93, 252, 0.07);
+
+  transition:
+    transform var(--qpa-transition),
+    box-shadow var(--qpa-transition);
+}
+
+.learning-placeholder:hover i {
+  transform:
+    translateY(-4px)
+    rotate(-3deg);
+
+  box-shadow:
+    0 17px 35px
+    rgba(109, 93, 252, 0.11);
+}
+
+.learning-placeholder h3 {
+  margin-bottom: 0.4rem;
+
+  letter-spacing:
+    -0.02em;
+}
+
+.learning-placeholder p {
+  max-width: 450px;
+
+  margin: 0;
+
+  color:
+    var(--qpa-text-muted);
+
+  line-height: 1.6;
+}
+
+
+/* =========================================================
+   LEARNING ACTIONS
+   ========================================================= */
+
+.learning-actions {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 1rem;
+
+  margin-top: 1rem;
+
+  padding: 1rem 1.2rem;
+
+  border:
+    1px solid
+    var(--qpa-border);
+
+  border-radius:
+    var(--qpa-radius-md);
+
+  background:
+    var(--qpa-surface);
+
+  color:
+    var(--qpa-text-muted);
+
+  font-size: 0.8rem;
+
+  box-shadow:
+    0 8px 25px
+    rgba(42, 42, 70, 0.035);
+
+  transition:
+    border-color var(--qpa-fast),
+    box-shadow var(--qpa-fast);
+}
+
+.learning-actions:hover {
+  border-color:
+    rgba(109, 93, 252, 0.14);
+
+  box-shadow:
+    0 12px 30px
+    rgba(42, 42, 70, 0.055);
+}
+
+.learning-actions .qpa-btn {
+  transition:
+    transform var(--qpa-fast),
+    box-shadow var(--qpa-fast);
+}
+
+.learning-actions .qpa-btn:hover {
+  transform:
+    translateY(-2px);
+}
+
+.learning-actions .qpa-btn:focus-visible {
+  outline:
+    3px solid
+    rgba(109, 93, 252, 0.22);
+
+  outline-offset:
+    3px;
+}
+
+
+/* =========================================================
+   COMPLETED STATE
+   ========================================================= */
+
+.lesson-completed {
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 0.4rem;
+
+  color:
+    #15803d;
+
+  font-weight: 700;
+
+  transition:
+    transform var(--qpa-fast);
+}
+
+.lesson-completed:hover {
+  transform:
+    translateY(-2px);
+}
+
+
+/* =========================================================
+   PAGE STATES
+   ========================================================= */
+
+.learning-state {
+  min-height: 60vh;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 0.8rem;
+
+  padding: 2rem;
+
+  text-align: center;
+
+  animation:
+    qpa-learning-state-in 500ms ease both;
+}
+
+.learning-state p {
+  max-width: 500px;
+
+  margin: 0;
+
+  color:
+    var(--qpa-text-muted);
+
+  line-height: 1.7;
+}
+
+.learning-state-icon {
+  width: 60px;
+  height: 60px;
+
+  display: grid;
+
+  place-items: center;
+
+  border-radius: 50%;
+
+  background:
+    rgba(109, 93, 252, 0.1);
+
+  color:
+    var(--qpa-primary);
+
+  box-shadow:
+    0 12px 30px
+    rgba(109, 93, 252, 0.07);
+
+  animation:
+    qpa-learning-state-icon 2.8s ease-in-out infinite;
+}
+
+@keyframes qpa-learning-state-in {
+  from {
+    opacity: 0;
+
+    transform:
+      translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+
+    transform:
+      translateY(0);
+  }
+}
+
+@keyframes qpa-learning-state-icon {
+  0%,
+  100% {
+    transform:
+      translateY(0);
+  }
+
+  50% {
+    transform:
+      translateY(-4px);
+  }
+}
+
+
+/* =========================================================
+   LARGE TABLET
+   ========================================================= */
+
+@media (max-width: 1050px) {
+  .learning-layout {
+    grid-template-columns:
+      270px minmax(0, 1fr);
+
+    gap: 1.25rem;
+  }
+
+  .learning-sidebar {
+    top: 5.5rem;
+  }
+
+  .learning-content-card {
+    padding:
+      1.7rem;
+  }
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 900px) {
+  .learning-layout {
+    grid-template-columns:
+      1fr;
+  }
+
+  .learning-sidebar {
+    position: static;
+  }
+
+  .learning-modules {
+    max-height:
+      400px;
+  }
+
+  .learning-topbar {
+    align-items:
+      flex-start;
+
+    flex-direction:
+      column;
+  }
+
+  .learning-progress {
+    width:
+      100%;
+  }
+
+  .learning-content-card {
+    min-height:
+      360px;
+  }
+}
+
+
+/* =========================================================
+   SMALL TABLET / MOBILE
+   ========================================================= */
+
+@media (max-width: 700px) {
+  .learning-page {
+    padding:
+      6rem 0 4rem;
+  }
+
+  .learning-sidebar {
+    border-radius:
+      var(--qpa-radius-md);
+  }
+
+  .learning-content-header h2 {
+    font-size:
+      1.55rem;
+  }
+
+  .learning-content-card {
+    border-radius:
+      var(--qpa-radius-md);
+  }
+
+  .learning-modules {
+    max-height:
+      350px;
+  }
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 600px) {
+  .learning-page {
+    padding-top:
+      5.5rem;
+  }
+
+  .learning-topbar {
+    gap:
+      1.25rem;
+
+    margin-bottom:
+      1.5rem;
+  }
+
+  .learning-topbar h1 {
+    font-size:
+      clamp(1.55rem, 7vw, 2rem);
+  }
+
+  .learning-progress {
+    width:
+      100%;
+  }
+
+  .learning-content-card {
+    min-height:
+      320px;
+
+    padding:
+      1.2rem;
+  }
+
+  .learning-content-header {
+    margin-bottom:
+      1rem;
+  }
+
+  .learning-content-header h2 {
+    font-size:
+      1.4rem;
+  }
+
+  .learning-content-header p {
+    font-size:
+      0.9rem;
+
+    line-height:
+      1.65;
+  }
+
+  .learning-actions {
+    align-items:
+      stretch;
+
+    flex-direction:
+      column;
+
+    padding:
+      0.9rem 1rem;
+  }
+
+  .learning-actions .qpa-btn {
+    width:
+      100%;
+
+    justify-content:
+      center;
+  }
+
+  .learning-placeholder {
+    min-height:
+      260px;
+  }
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 430px) {
+  .learning-page {
+    padding:
+      5rem 0 3.5rem;
+  }
+
+  .learning-sidebar-header {
+    padding:
+      0.9rem;
+  }
+
+  .learning-lesson {
+    padding:
+      0.8rem 0.85rem;
+  }
+
+  .learning-lesson:hover {
+    padding-left:
+      0.95rem;
+  }
+
+  .learning-module-title {
+    padding:
+      0.8rem 0.85rem;
+  }
+
+  .learning-content-card {
+    padding:
+      1rem;
+
+    border-radius:
+      18px;
+  }
+
+  .learning-content-header h2 {
+    font-size:
+      1.3rem;
+  }
+
+  .learning-type {
+    font-size:
+      0.64rem;
+  }
+
+  .learning-text-content p {
+    font-size:
+      0.91rem;
+
+    line-height:
+      1.8;
+  }
+
+  .learning-placeholder {
+    min-height:
+      230px;
+
+    padding:
+      0.5rem;
+  }
+
+  .learning-placeholder i {
+    width:
+      56px;
+
+    height:
+      56px;
+
+    font-size:
+      1.7rem;
+  }
+
+  .learning-state {
+    padding:
+      1.25rem;
+  }
+}
+
+
+/* =========================================================
+   VERY SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 360px) {
+  .learning-page {
+    padding-top:
+      4.6rem;
+  }
+
+  .learning-topbar h1 {
+    font-size:
+      1.45rem;
+  }
+
+  .learning-progress-label {
+    font-size:
+      0.68rem;
+  }
+
+  .learning-sidebar-header span {
+    font-size:
+      0.88rem;
+  }
+
+  .learning-sidebar-header strong {
+    font-size:
+      0.68rem;
+  }
+
+  .learning-lesson {
+    gap:
+      0.5rem;
+
+    font-size:
+      0.72rem;
+  }
+
+  .learning-lesson-name {
+    font-size:
+      0.72rem;
+  }
+
+  .learning-content-card {
+    padding:
+      0.85rem;
+  }
+
+  .learning-content-header h2 {
+    font-size:
+      1.2rem;
+  }
+
+  .learning-text-content p {
+    font-size:
+      0.88rem;
+  }
+
+  .learning-actions {
+    font-size:
+      0.74rem;
+  }
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .learning-state,
+  .learning-state-icon {
+    animation:
+      none !important;
+  }
+
+  .learning-back,
+  .learning-sidebar,
+  .learning-lesson,
+  .learning-lesson-icon,
+  .learning-type,
+  .learning-content-card,
+  .learning-actions,
+  .learning-actions .qpa-btn,
+  .learning-placeholder i,
+  .lesson-completed {
+    transition:
+      none !important;
+  }
+}
+
+/* =========================================================
+   QPA DICTATION RESULTS — STEP 8
+========================================================= */
+
+.dictation-results {
+  position: relative;
+  margin-top: 2rem;
+  padding: clamp(1.25rem, 3vw, 2rem);
+  border: 1px solid rgba(99, 102, 241, 0.12);
+  border-radius: 28px;
+  background:
+    radial-gradient(
+      circle at 100% 0%,
+      rgba(99, 102, 241, 0.08),
+      transparent 34%
+    ),
+    #ffffff;
+  box-shadow:
+    0 24px 70px rgba(15, 23, 42, 0.08);
+  overflow: hidden;
+}
+
+.dictation-results::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.7),
+      transparent 45%
+    );
+}
+
+.dictation-results-header,
+.dictation-word-review-header {
+  position: relative;
+  z-index: 1;
+}
+
+.dictation-results-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 0.65rem;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  color: #6366f1;
+}
+
+.dictation-results-header h2,
+.dictation-word-review-header h3 {
+  margin: 0;
+  color: #111827;
+  letter-spacing: -0.035em;
+}
+
+.dictation-results-header h2 {
+  font-size: clamp(1.65rem, 4vw, 2.35rem);
+}
+
+.dictation-word-review-header h3 {
+  font-size: clamp(1.25rem, 3vw, 1.65rem);
+}
+
+.dictation-results-header p,
+.dictation-word-review-header p {
+  max-width: 680px;
+  margin: 0.65rem 0 0;
+  color: #64748b;
+  line-height: 1.7;
+}
+
+/* =========================================================
+   MAIN RESULT STATS
+========================================================= */
+
+.dictation-results-stats {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.dictation-result-stat {
+  position: relative;
+  min-width: 0;
+  padding: 1.25rem;
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  border-radius: 20px;
+  background: rgba(248, 250, 252, 0.9);
+  box-shadow:
+    0 10px 28px rgba(15, 23, 42, 0.045);
+  overflow: hidden;
+  transition:
+    transform 220ms ease,
+    box-shadow 220ms ease,
+    border-color 220ms ease,
+    background 220ms ease;
+}
+
+.dictation-result-stat::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  background:
+    linear-gradient(
+      120deg,
+      transparent 30%,
+      rgba(255, 255, 255, 0.8) 50%,
+      transparent 70%
+    );
+  transform: translateX(-100%);
+  transition:
+    transform 600ms ease,
+    opacity 220ms ease;
+}
+
+.dictation-result-stat:hover {
+  transform: translateY(-4px);
+  border-color: rgba(99, 102, 241, 0.22);
+  background: #ffffff;
+  box-shadow:
+    0 18px 38px rgba(15, 23, 42, 0.09);
+}
+
+.dictation-result-stat:hover::after {
+  opacity: 1;
+  transform: translateX(100%);
+}
+
+.dictation-result-stat-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #64748b;
+}
+
+.dictation-result-stat strong {
+  display: block;
+  font-size: clamp(1.65rem, 4vw, 2.2rem);
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: #111827;
+}
+
+.dictation-result-stat small {
+  display: block;
+  margin-top: 0.55rem;
+  color: #94a3b8;
+}
+
+/* =========================================================
+   MISTAKE SUMMARY
+========================================================= */
+
+.dictation-mistake-summary {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0.8rem;
+  margin-top: 1rem;
+}
+
+.dictation-summary-card {
+  padding: 1rem;
+  border-radius: 18px;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  background: #f8fafc;
+  transition:
+    transform 200ms ease,
+    box-shadow 200ms ease,
+    border-color 200ms ease;
+}
+
+.dictation-summary-card:hover {
+  transform: translateY(-3px);
+  box-shadow:
+    0 12px 26px rgba(15, 23, 42, 0.07);
+}
+
+.dictation-summary-card span {
+  display: block;
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: #64748b;
+}
+
+.dictation-summary-card strong {
+  display: block;
+  margin-top: 0.3rem;
+  font-size: 1.5rem;
+  color: #111827;
+}
+
+.dictation-summary-correct {
+  border-color: rgba(16, 185, 129, 0.2);
+}
+
+.dictation-summary-half {
+  border-color: rgba(245, 158, 11, 0.2);
+}
+
+.dictation-summary-full {
+  border-color: rgba(239, 68, 68, 0.2);
+}
+
+.dictation-summary-missing {
+  border-color: rgba(139, 92, 246, 0.2);
+}
+
+.dictation-summary-extra {
+  border-color: rgba(14, 165, 233, 0.2);
+}
+
+/* =========================================================
+   WORD REVIEW
+========================================================= */
+
+.dictation-word-review {
+  position: relative;
+  z-index: 1;
+  margin-top: 1.5rem;
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  border-radius: 24px;
+  background: #ffffff;
+  overflow: hidden;
+}
+
+.dictation-word-review-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 1.4rem;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.14);
+}
+
+.dictation-word-legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.7rem;
+}
+
+.dictation-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  white-space: nowrap;
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: #64748b;
+}
+
+.dictation-legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.dictation-legend-correct {
+  background: #10b981;
+}
+
+.dictation-legend-half {
+  background: #f59e0b;
+}
+
+.dictation-legend-full {
+  background: #ef4444;
+}
+
+.dictation-legend-missing {
+  background: #8b5cf6;
+}
+
+/* =========================================================
+   WORD TABLE
+========================================================= */
+
+.dictation-word-table {
+  width: 100%;
+}
+
+.dictation-word-row {
+  display: grid;
+  grid-template-columns:
+    60px
+    minmax(150px, 1fr)
+    minmax(150px, 1fr)
+    minmax(130px, 0.8fr)
+    90px;
+  align-items: center;
+  min-height: 64px;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+  transition:
+    background 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.dictation-word-row:last-child {
+  border-bottom: 0;
+}
+
+.dictation-word-row:not(.dictation-word-row-head):hover {
+  background: rgba(248, 250, 252, 0.9);
+  box-shadow:
+    inset 3px 0 0 rgba(99, 102, 241, 0.6);
+}
+
+.dictation-word-row > span {
+  min-width: 0;
+  padding: 0.8rem 1rem;
+}
+
+.dictation-word-row-head {
+  min-height: 48px;
+  background: #f8fafc;
+  color: #64748b;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.dictation-word-index {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #94a3b8;
+}
+
+.dictation-expected-word,
+.dictation-typed-word {
+  overflow-wrap: anywhere;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.dictation-typed-word {
+  color: #475569;
+}
+
+.dictation-word-result {
+  display: flex;
+  align-items: center;
+}
+
+.dictation-word-badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 0.35rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.dictation-word-similarity {
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: #64748b;
+}
+
+/* =========================================================
+   WORD STATES
+========================================================= */
+
+.dictation-word-correct {
+  background: rgba(16, 185, 129, 0.025);
+}
+
+.dictation-word-correct .dictation-word-badge {
+  color: #047857;
+  background: rgba(16, 185, 129, 0.1);
+}
+
+.dictation-word-half {
+  background: rgba(245, 158, 11, 0.025);
+}
+
+.dictation-word-half .dictation-word-badge {
+  color: #b45309;
+  background: rgba(245, 158, 11, 0.12);
+}
+
+.dictation-word-full {
+  background: rgba(239, 68, 68, 0.025);
+}
+
+.dictation-word-full .dictation-word-badge {
+  color: #b91c1c;
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.dictation-word-missing {
+  background: rgba(139, 92, 246, 0.025);
+}
+
+.dictation-word-missing .dictation-word-badge {
+  color: #6d28d9;
+  background: rgba(139, 92, 246, 0.1);
+}
+
+.dictation-word-extra {
+  background: rgba(14, 165, 233, 0.025);
+}
+
+.dictation-word-extra .dictation-word-badge {
+  color: #0369a1;
+  background: rgba(14, 165, 233, 0.1);
+}
+
+/* =========================================================
+   RESULT FOOTER
+========================================================= */
+
+.dictation-results-footer {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.8rem;
+  margin-top: 1rem;
+}
+
+.dictation-results-footer-item {
+  padding: 1rem;
+  border-radius: 18px;
+  background: #f8fafc;
+  border: 1px solid rgba(148, 163, 184, 0.12);
+}
+
+.dictation-results-footer-item span {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #64748b;
+}
+
+.dictation-results-footer-item strong {
+  display: block;
+  margin-top: 0.35rem;
+  font-size: 1.2rem;
+  color: #111827;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 900px) {
+  .dictation-results-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .dictation-mistake-summary {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .dictation-results-footer {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .dictation-word-review-header {
+    flex-direction: column;
+  }
+
+  .dictation-word-legend {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 700px) {
+  .dictation-results {
+    padding: 1rem;
+    border-radius: 22px;
+  }
+
+  .dictation-mistake-summary {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .dictation-word-review {
+    overflow-x: auto;
+  }
+
+  .dictation-word-table {
+    min-width: 720px;
+  }
+}
+
+@media (max-width: 480px) {
+  .dictation-results-stats {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.65rem;
+  }
+
+  .dictation-result-stat {
+    padding: 1rem;
+    border-radius: 16px;
+  }
+
+  .dictation-mistake-summary {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .dictation-results-footer {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .dictation-results-header h2 {
+    font-size: 1.55rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .dictation-results-stats,
+  .dictation-mistake-summary,
+  .dictation-results-footer {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =========================================================
+   ACCESSIBILITY / REDUCED MOTION
+========================================================= */
+
+.dictation-result-stat:focus-within,
+.dictation-summary-card:focus-within {
+  outline: 3px solid rgba(99, 102, 241, 0.22);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dictation-result-stat,
+  .dictation-result-stat::after,
+  .dictation-summary-card,
+  .dictation-word-row {
+    transition: none;
+  }
+
+  .dictation-result-stat:hover,
+  .dictation-summary-card:hover {
+    transform: none;
+  }
+}
+
+/* =========================================================
+   QPA DICTATION ADMIN TRANSCRIPT FIELD — STEP 10
+========================================================= */
+
+.admin-dictation-transcript-field {
+  grid-column: 1 / -1;
+}
+
+.admin-dictation-transcript-field textarea {
+  width: 100%;
+  min-height: 180px;
+  resize: vertical;
+  line-height: 1.7;
+}
+
+.admin-dictation-transcript-field small {
+  display: block;
+  margin-top: 0.55rem;
+  color: #64748b;
+  font-size: 0.78rem;
+  line-height: 1.55;
+}
+
+@media (max-width: 700px) {
+  .admin-dictation-transcript-field textarea {
+    min-height: 150px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .admin-dictation-transcript-field textarea {
+    transition: none !important;
+  }
+}
+
+/* Paste at the bottom of your learning page CSS file. */
+
+.dictation-results-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px 24px;
+}
+
+.dictation-results-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px;
+  min-width: 260px;
+  max-width: 100%;
+}
+
+.dictation-results-actions .learning-audio {
+  width: 100%;
+}
+
+.dictation-results-actions .qpa-btn {
+  justify-content: center;
+  gap: 8px;
+}
+
+@media (max-width: 640px) {
+  .dictation-results-actions {
+    width: 100%;
+    min-width: 0;
+  }
+}

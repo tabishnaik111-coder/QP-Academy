@@ -1,0 +1,656 @@
+/* =========================================================
+   QPA ADMIN ANALYTICS
+   PART 38 — RESPONSIVE + ANIMATION + UI/UX POLISH
+========================================================= */
+
+.admin-analytics-section {
+  scroll-margin-top: 28px;
+}
+
+/* =========================================================
+   SECTION DESCRIPTION
+========================================================= */
+
+.admin-section-description {
+  margin: 10px 0 0;
+  color: var(--color-text-muted);
+  line-height: 1.7;
+}
+
+/* =========================================================
+   LOADING / EMPTY / ERROR STATES
+========================================================= */
+
+.admin-analytics-state,
+.admin-analytics-empty {
+  min-height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 32px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  box-shadow: var(--shadow-sm);
+  transition:
+    border-color var(--transition-base),
+    box-shadow var(--transition-base),
+    transform var(--transition-base);
+  animation: adminAnalyticsFadeUp 0.45s ease both;
+}
+
+.admin-analytics-state:hover,
+.admin-analytics-empty:hover {
+  border-color: rgba(79, 108, 255, 0.22);
+  box-shadow: var(--shadow-md);
+}
+
+.admin-analytics-error {
+  color: #b91c1c;
+}
+
+/* =========================================================
+   ANALYTICS METRICS
+========================================================= */
+
+.admin-analytics-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+/* =========================================================
+   METRIC CARD
+========================================================= */
+
+.admin-analytics-metric {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  padding: 22px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-sm);
+  transition:
+    transform var(--transition-base),
+    box-shadow var(--transition-base),
+    border-color var(--transition-base);
+  animation: adminAnalyticsFadeUp 0.5s ease both;
+}
+
+.admin-analytics-metric::before {
+  content: "";
+  position: absolute;
+  top: -55px;
+  right: -55px;
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(79, 108, 255, 0.1),
+    transparent 70%
+  );
+  pointer-events: none;
+  transition:
+    transform 0.5s ease,
+    opacity 0.4s ease;
+}
+
+.admin-analytics-metric::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -120%;
+  width: 65%;
+  height: 100%;
+  background: linear-gradient(
+    100deg,
+    transparent,
+    rgba(255, 255, 255, 0.45),
+    transparent
+  );
+  transform: skewX(-20deg);
+  pointer-events: none;
+  transition: left 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.admin-analytics-metric:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-md);
+  border-color: rgba(79, 108, 255, 0.35);
+}
+
+.admin-analytics-metric:hover::before {
+  transform: scale(1.35);
+}
+
+.admin-analytics-metric:hover::after {
+  left: 135%;
+}
+
+.admin-analytics-metric span {
+  position: relative;
+  z-index: 1;
+  display: block;
+  margin-bottom: 8px;
+  color: var(--color-text-muted);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.admin-analytics-metric strong {
+  position: relative;
+  z-index: 1;
+  display: block;
+  font-size: 1.8rem;
+  line-height: 1;
+  letter-spacing: -0.035em;
+  transition:
+    transform 0.3s ease;
+}
+
+.admin-analytics-metric:hover strong {
+  transform: translateX(2px);
+}
+
+/* =========================================================
+   MAIN ANALYTICS GRID
+========================================================= */
+
+.admin-analytics-grid {
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1.6fr)
+    minmax(300px, 0.9fr);
+  gap: 20px;
+}
+
+/* =========================================================
+   ANALYTICS CARD
+========================================================= */
+
+.admin-analytics-card {
+  position: relative;
+  min-width: 0;
+  padding: 24px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-sm);
+  transition:
+    border-color var(--transition-base),
+    box-shadow var(--transition-base),
+    transform var(--transition-base);
+  animation: adminAnalyticsFadeUp 0.55s ease both;
+}
+
+.admin-analytics-card:hover {
+  border-color: rgba(79, 108, 255, 0.2);
+  box-shadow: var(--shadow-md);
+}
+
+.admin-analytics-wide {
+  grid-column: span 2;
+}
+
+/* =========================================================
+   CARD HEADER
+========================================================= */
+
+.admin-analytics-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 20px;
+}
+
+.admin-analytics-card-header h3 {
+  margin: 5px 0 0;
+  font-size: 1.25rem;
+  letter-spacing: -0.025em;
+}
+
+.admin-analytics-card-header select {
+  min-width: 190px;
+  cursor: pointer;
+  transition:
+    border-color var(--transition-base),
+    box-shadow var(--transition-base);
+}
+
+.admin-analytics-card-header select:hover {
+  border-color: rgba(79, 108, 255, 0.4);
+}
+
+.admin-analytics-card-header select:focus-visible {
+  outline: none;
+  border-color: rgba(79, 108, 255, 0.55);
+  box-shadow:
+    0 0 0 4px rgba(79, 108, 255, 0.1);
+}
+
+/* =========================================================
+   TABLE WRAPPER
+========================================================= */
+
+.admin-analytics-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+}
+
+/* =========================================================
+   TABLE
+========================================================= */
+
+.admin-analytics-table {
+  width: 100%;
+  min-width: 720px;
+  border-collapse: collapse;
+}
+
+.admin-analytics-table th,
+.admin-analytics-table td {
+  padding: 14px 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--color-border);
+  vertical-align: middle;
+}
+
+.admin-analytics-table th {
+  color: var(--color-text-muted);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.admin-analytics-table td {
+  font-size: 0.9rem;
+}
+
+.admin-analytics-table tbody tr {
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.admin-analytics-table tbody tr:hover {
+  background: rgba(79, 108, 255, 0.035);
+}
+
+.admin-analytics-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+/* =========================================================
+   ANALYTICS USER
+========================================================= */
+
+.admin-analytics-user {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.admin-analytics-user span {
+  color: var(--color-text-muted);
+  font-size: 0.78rem;
+}
+
+/* =========================================================
+   PAYMENT STATUS
+========================================================= */
+
+.admin-payment-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: capitalize;
+  white-space: nowrap;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.admin-payment-status:hover {
+  transform: translateY(-1px);
+}
+
+.admin-payment-status.paid {
+  background: #ecfdf5;
+  color: #047857;
+}
+
+.admin-payment-status.failed {
+  background: #fef2f2;
+  color: #b91c1c;
+}
+
+.admin-payment-status.refunded {
+  background: #fff7ed;
+  color: #c2410c;
+}
+
+/* =========================================================
+   ENROLLMENT LIST
+========================================================= */
+
+.admin-enrollment-list {
+  display: grid;
+  gap: 2px;
+}
+
+.admin-enrollment-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--color-border);
+  transition:
+    padding-left 0.25s ease,
+    background-color 0.25s ease;
+}
+
+.admin-enrollment-item:hover {
+  padding-left: 6px;
+}
+
+.admin-enrollment-item:last-child {
+  border-bottom: 0;
+}
+
+.admin-enrollment-item > div {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.admin-enrollment-item strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.admin-enrollment-item span,
+.admin-enrollment-item small {
+  color: var(--color-text-muted);
+  font-size: 0.78rem;
+}
+
+.admin-enrollment-item span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* =========================================================
+   RANK BADGE
+========================================================= */
+
+.admin-rank-badge {
+  display: inline-flex;
+  min-width: 42px;
+  justify-content: center;
+  padding: 6px 9px;
+  border: 1px solid rgba(79, 108, 255, 0.08);
+  border-radius: 999px;
+  background: rgba(79, 108, 255, 0.1);
+  color: var(--color-primary);
+  font-size: 0.75rem;
+  font-weight: 800;
+  transition:
+    transform 0.22s ease,
+    background-color 0.22s ease,
+    border-color 0.22s ease;
+}
+
+.admin-rank-badge:hover {
+  transform: translateY(-1px);
+  background: rgba(79, 108, 255, 0.15);
+  border-color: rgba(79, 108, 255, 0.18);
+}
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 1000px) {
+  .admin-analytics-metrics {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .admin-analytics-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-analytics-wide {
+    grid-column: auto;
+  }
+}
+
+/* =========================================================
+   SMALL TABLET
+========================================================= */
+
+@media (max-width: 760px) {
+  .admin-analytics-card {
+    padding: 21px;
+  }
+
+  .admin-analytics-card-header {
+    gap: 14px;
+  }
+
+  .admin-analytics-metric {
+    padding: 20px;
+  }
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 600px) {
+  .admin-analytics-metrics {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .admin-analytics-metric {
+    padding: 19px;
+  }
+
+  .admin-analytics-metric strong {
+    font-size: 1.65rem;
+  }
+
+  .admin-analytics-card {
+    padding: 18px;
+    border-radius: var(--radius-lg);
+  }
+
+  .admin-analytics-card-header {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .admin-analytics-card-header select {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .admin-analytics-table th,
+  .admin-analytics-table td {
+    padding: 12px 10px;
+  }
+
+  .admin-analytics-state,
+  .admin-analytics-empty {
+    min-height: 140px;
+    padding: 24px 18px;
+    text-align: center;
+  }
+
+  .admin-enrollment-item {
+    gap: 10px;
+  }
+}
+
+/* =========================================================
+   VERY SMALL MOBILE
+========================================================= */
+
+@media (max-width: 380px) {
+  .admin-analytics-card {
+    padding: 15px;
+  }
+
+  .admin-analytics-metric {
+    padding: 17px;
+  }
+
+  .admin-analytics-metric span {
+    font-size: 0.78rem;
+  }
+
+  .admin-analytics-metric strong {
+    font-size: 1.5rem;
+  }
+
+  .admin-analytics-card-header h3 {
+    font-size: 1.12rem;
+  }
+
+  .admin-enrollment-item {
+    padding: 12px 0;
+  }
+
+  .admin-rank-badge {
+    min-width: 38px;
+    padding: 5px 8px;
+  }
+}
+
+/* =========================================================
+   ANIMATIONS
+========================================================= */
+
+@keyframes adminAnalyticsFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .admin-analytics-state,
+  .admin-analytics-empty,
+  .admin-analytics-metric,
+  .admin-analytics-card {
+    animation: none;
+  }
+
+  .admin-analytics-metric,
+  .admin-analytics-metric::before,
+  .admin-analytics-metric::after,
+  .admin-analytics-card,
+  .admin-payment-status,
+  .admin-enrollment-item,
+  .admin-rank-badge,
+  .admin-analytics-card-header select,
+  .admin-analytics-table tbody tr {
+    transition: none;
+  }
+
+  .admin-analytics-metric:hover,
+  .admin-payment-status:hover,
+  .admin-rank-badge:hover {
+    transform: none;
+  }
+
+  .admin-analytics-metric::after {
+    display: none;
+  }
+}
+
+/* Paste at the bottom of your admin dashboard CSS file. */
+
+.admin-analytics-section .admin-section-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.admin-live-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+.admin-live-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--qpa-text-muted, #475569);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.admin-live-status i {
+  color: #16a34a;
+  font-size: 0.55rem;
+  animation: admin-live-pulse 1.8s ease-in-out infinite;
+}
+
+@keyframes admin-live-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.admin-live-refresh {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border: 1px solid var(--qpa-border, #e2e8f0);
+  border-radius: 999px;
+  background: var(--qpa-surface, #ffffff);
+  color: var(--qpa-text, #0f172a);
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.admin-live-refresh:hover {
+  background: var(--qpa-surface-muted, #f1f5f9);
+  transform: translateY(-1px);
+}

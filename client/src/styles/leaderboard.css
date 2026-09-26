@@ -1,0 +1,604 @@
+.leaderboard-page {
+  min-height: 100vh;
+  background:
+    radial-gradient(
+      circle at 15% 10%,
+      rgba(99, 102, 241, 0.08),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 85% 15%,
+      rgba(168, 85, 247, 0.08),
+      transparent 30%
+    ),
+    var(--qpa-background);
+}
+
+.leaderboard-hero {
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+}
+
+.leaderboard-hero::before,
+.leaderboard-hero::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(2px);
+}
+
+.leaderboard-hero::before {
+  width: 280px;
+  height: 280px;
+  top: -150px;
+  left: -100px;
+  background: rgba(99, 102, 241, 0.1);
+}
+
+.leaderboard-hero::after {
+  width: 300px;
+  height: 300px;
+  right: -120px;
+  bottom: -180px;
+  background: rgba(168, 85, 247, 0.1);
+}
+
+.leaderboard-hero-content {
+  position: relative;
+  z-index: 1;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.leaderboard-hero h1 {
+  margin: 18px 0 14px;
+  font-family: var(--qpa-font-heading);
+  font-size: clamp(2.2rem, 6vw, 4.5rem);
+  line-height: 1.02;
+  letter-spacing: -0.05em;
+}
+
+.leaderboard-hero p {
+  max-width: 620px;
+  margin: 0 auto;
+  color: var(--qpa-text-muted);
+  font-size: 1.05rem;
+  line-height: 1.7;
+}
+
+.leaderboard-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 28px;
+  padding: 6px;
+  border: 1px solid var(--qpa-border);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: var(--qpa-shadow-sm);
+}
+
+.leaderboard-switch-btn,
+.leaderboard-switch-current {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 0 16px;
+  border-radius: 999px;
+  color: var(--qpa-text-muted);
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.leaderboard-switch-btn {
+  transition:
+    transform var(--qpa-transition),
+    background var(--qpa-transition),
+    color var(--qpa-transition);
+}
+
+.leaderboard-switch-btn:hover {
+  color: var(--qpa-text);
+  transform: translateY(-1px);
+}
+
+.leaderboard-switch-btn.active {
+  color: white;
+  background: var(--qpa-gradient);
+  box-shadow: var(--qpa-shadow-sm);
+}
+
+.leaderboard-switch-current {
+  color: var(--qpa-text);
+  background: var(--qpa-surface-muted);
+}
+
+.leaderboard-content {
+  padding-top: 10px;
+}
+
+.leaderboard-state {
+  min-height: 360px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 50px 24px;
+  border: 1px solid var(--qpa-border);
+  border-radius: var(--qpa-radius-xl);
+  background: var(--qpa-surface);
+  box-shadow: var(--qpa-shadow-sm);
+}
+
+.leaderboard-state h2 {
+  margin: 16px 0 8px;
+  font-family: var(--qpa-font-heading);
+}
+
+.leaderboard-state p {
+  max-width: 500px;
+  margin: 0 0 24px;
+  color: var(--qpa-text-muted);
+  line-height: 1.6;
+}
+
+.leaderboard-spinner {
+  font-size: 2rem;
+  color: var(--qpa-primary);
+}
+
+.leaderboard-state-icon {
+  width: 68px;
+  height: 68px;
+  display: grid;
+  place-items: center;
+  border-radius: 20px;
+  color: var(--qpa-primary);
+  background: var(--qpa-primary-soft);
+  font-size: 1.5rem;
+}
+
+.leaderboard-error .leaderboard-state-icon {
+  color: #dc2626;
+  background: rgba(220, 38, 38, 0.08);
+}
+
+.leaderboard-podium {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  align-items: end;
+  gap: 18px;
+  max-width: 950px;
+  margin: 0 auto 30px;
+}
+
+.leaderboard-podium-card {
+  position: relative;
+  min-height: 290px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 30px 20px;
+  overflow: hidden;
+  border: 1px solid var(--qpa-border);
+  border-radius: var(--qpa-radius-xl);
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: var(--qpa-shadow-md);
+  transition:
+    transform var(--qpa-transition),
+    box-shadow var(--qpa-transition);
+}
+
+.leaderboard-podium-card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--qpa-shadow-lg);
+}
+
+.leaderboard-podium-card.rank-1 {
+  min-height: 330px;
+  order: 2;
+  border-color: rgba(99, 102, 241, 0.3);
+  background:
+    linear-gradient(
+      145deg,
+      rgba(99, 102, 241, 0.1),
+      rgba(168, 85, 247, 0.06)
+    ),
+    white;
+}
+
+.leaderboard-podium-card.rank-2 {
+  order: 1;
+}
+
+.leaderboard-podium-card.rank-3 {
+  order: 3;
+}
+
+.leaderboard-podium-rank {
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  font-weight: 800;
+  color: var(--qpa-primary);
+}
+
+.rank-1 .leaderboard-podium-rank {
+  color: #d97706;
+  font-size: 1.25rem;
+}
+
+.leaderboard-avatar {
+  width: 76px;
+  height: 76px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 15px;
+  overflow: hidden;
+  border: 3px solid rgba(99, 102, 241, 0.18);
+  border-radius: 50%;
+  background: var(--qpa-primary-soft);
+  color: var(--qpa-primary);
+  font-size: 1.5rem;
+  font-weight: 800;
+}
+
+.rank-1 .leaderboard-avatar {
+  width: 92px;
+  height: 92px;
+}
+
+.leaderboard-avatar img,
+.leaderboard-table-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.leaderboard-podium-card h3 {
+  margin: 0 0 10px;
+  font-family: var(--qpa-font-heading);
+  font-size: 1.05rem;
+}
+
+.leaderboard-podium-score {
+  font-family: var(--qpa-font-heading);
+  font-size: 2rem;
+  font-weight: 900;
+  background: var(--qpa-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.leaderboard-podium-card > span {
+  margin-top: 2px;
+  color: var(--qpa-text-muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.leaderboard-my-position {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  margin-bottom: 28px;
+  overflow: hidden;
+  border: 1px solid var(--qpa-border);
+  border-radius: var(--qpa-radius-lg);
+  background: var(--qpa-border);
+  box-shadow: var(--qpa-shadow-sm);
+}
+
+.leaderboard-my-position > div {
+  padding: 20px;
+  background: var(--qpa-surface);
+}
+
+.leaderboard-my-position span {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--qpa-text-muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.leaderboard-my-position strong {
+  font-family: var(--qpa-font-heading);
+  font-size: 1.35rem;
+}
+
+.leaderboard-table-card {
+  overflow: hidden;
+  border: 1px solid var(--qpa-border);
+  border-radius: var(--qpa-radius-xl);
+  background: var(--qpa-surface);
+  box-shadow: var(--qpa-shadow-md);
+}
+
+.leaderboard-table-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 26px 28px;
+  border-bottom: 1px solid var(--qpa-border);
+}
+
+.leaderboard-table-header h2 {
+  margin: 10px 0 0;
+  font-family: var(--qpa-font-heading);
+  font-size: 1.5rem;
+}
+
+.leaderboard-count {
+  flex-shrink: 0;
+  padding: 8px 13px;
+  border-radius: 999px;
+  background: var(--qpa-surface-muted);
+  color: var(--qpa-text-muted);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.leaderboard-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.leaderboard-table {
+  width: 100%;
+  min-width: 720px;
+  border-collapse: collapse;
+}
+
+.leaderboard-table th {
+  padding: 15px 20px;
+  background: var(--qpa-surface-muted);
+  color: var(--qpa-text-muted);
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-align: left;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.leaderboard-table td {
+  padding: 17px 20px;
+  border-top: 1px solid var(--qpa-border);
+  color: var(--qpa-text-muted);
+  font-size: 0.92rem;
+}
+
+.leaderboard-table tbody tr {
+  transition: background var(--qpa-transition);
+}
+
+.leaderboard-table tbody tr:hover {
+  background: rgba(99, 102, 241, 0.035);
+}
+
+.leaderboard-table tbody tr.current-user {
+  background: rgba(99, 102, 241, 0.07);
+}
+
+.leaderboard-rank {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-weight: 800;
+  color: var(--qpa-text);
+}
+
+.leaderboard-rank i {
+  color: #d97706;
+}
+
+.leaderboard-student {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.leaderboard-table-avatar {
+  width: 42px;
+  height: 42px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border-radius: 50%;
+  background: var(--qpa-primary-soft);
+  color: var(--qpa-primary);
+  font-weight: 800;
+}
+
+.leaderboard-student strong {
+  display: block;
+  color: var(--qpa-text);
+}
+
+.leaderboard-student small {
+  display: inline-block;
+  margin-top: 3px;
+  color: var(--qpa-primary);
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.leaderboard-score {
+  color: var(--qpa-primary);
+  font-size: 1rem;
+}
+
+@media (max-width: 800px) {
+  .leaderboard-podium {
+    grid-template-columns: 1fr;
+    align-items: stretch;
+    max-width: 520px;
+  }
+
+  .leaderboard-podium-card,
+  .leaderboard-podium-card.rank-1 {
+    min-height: 260px;
+  }
+
+  .leaderboard-podium-card.rank-1,
+  .leaderboard-podium-card.rank-2,
+  .leaderboard-podium-card.rank-3 {
+    order: initial;
+  }
+
+  .leaderboard-my-position {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .leaderboard-hero h1 {
+    font-size: 2.3rem;
+  }
+
+  .leaderboard-switch {
+    max-width: 100%;
+  }
+
+  .leaderboard-switch-current {
+    max-width: 180px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .leaderboard-table-header {
+    align-items: flex-start;
+    flex-direction: column;
+    padding: 22px 18px;
+  }
+
+  .leaderboard-my-position > div {
+    padding: 16px;
+  }
+
+  .leaderboard-state {
+    min-height: 300px;
+    padding: 35px 18px;
+  }
+}
+
+/* Paste at the BOTTOM of leaderboard.css (after everything else).
+
+   Why the text looked white: the switch and the podium scores rely on
+   var(--qpa-gradient). If that variable is not defined in your global CSS,
+   the background disappears and the white text is invisible. These rules
+   add fallback values so they always render. */
+
+/* ---------- Global / course switch ---------- */
+
+.leaderboard-switch {
+  flex-wrap: wrap;
+  justify-content: center;
+  background: var(--qpa-surface, #ffffff);
+}
+
+/* Buttons need their browser default styles removed */
+.leaderboard-switch .leaderboard-switch-btn {
+  border: 0;
+  background: transparent;
+  font-family: inherit;
+  cursor: pointer;
+  color: var(--qpa-text-muted, #475569);
+}
+
+.leaderboard-switch .leaderboard-switch-btn:hover {
+  color: var(--qpa-text, #0f172a);
+}
+
+.leaderboard-switch .leaderboard-switch-btn.active {
+  color: #ffffff;
+  background: var(--qpa-gradient, linear-gradient(135deg, #6366f1, #a855f7));
+}
+
+.leaderboard-switch .leaderboard-switch-btn:focus-visible,
+.leaderboard-course-picker select:focus-visible {
+  outline: 2px solid var(--qpa-primary, #6366f1);
+  outline-offset: 2px;
+}
+
+/* ---------- Course dropdown ---------- */
+
+.leaderboard-course-picker {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 0 14px;
+  border-radius: 999px;
+  color: var(--qpa-text, #0f172a);
+  background: var(--qpa-surface-muted, #f1f5f9);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.leaderboard-course-picker.active {
+  color: #ffffff;
+  background: var(--qpa-gradient, linear-gradient(135deg, #6366f1, #a855f7));
+}
+
+.leaderboard-course-picker select {
+  max-width: 220px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  text-overflow: ellipsis;
+}
+
+/* The open dropdown list must stay readable */
+.leaderboard-course-picker select option {
+  color: #0f172a;
+  background: #ffffff;
+}
+
+/* ---------- Podium score (gradient text) ---------- */
+
+.leaderboard-podium-score {
+  background: var(--qpa-gradient, linear-gradient(135deg, #6366f1, #a855f7));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ---------- "You are not ranked" note ---------- */
+
+.leaderboard-not-ranked {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 28px;
+  padding: 16px 20px;
+  border: 1px solid var(--qpa-border, #e2e8f0);
+  border-radius: var(--qpa-radius-lg, 16px);
+  background: var(--qpa-surface, #ffffff);
+  color: var(--qpa-text-muted, #475569);
+  font-size: 0.92rem;
+}
+
+.leaderboard-not-ranked i {
+  color: var(--qpa-primary, #6366f1);
+}
+
+@media (max-width: 600px) {
+  .leaderboard-course-picker select {
+    max-width: 150px;
+  }
+}

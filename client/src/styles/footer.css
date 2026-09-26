@@ -1,0 +1,694 @@
+/* =========================================================
+   QPA FOOTER
+   PART 38 — RESPONSIVE + ANIMATION + UI/UX POLISH
+   ========================================================= */
+
+.qpa-footer {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  margin-top: 30px;
+  padding: 85px 0 28px;
+  background:
+    radial-gradient(
+      circle at 15% 15%,
+      rgba(103, 92, 255, 0.1),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 85% 80%,
+      rgba(139, 92, 246, 0.08),
+      transparent 30%
+    ),
+    #10101a;
+  color: #fff;
+}
+
+.qpa-footer::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(
+      rgba(255, 255, 255, 0.025) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.025) 1px,
+      transparent 1px
+    );
+  background-size: 60px 60px;
+  mask-image: linear-gradient(to bottom, black, transparent 85%);
+  -webkit-mask-image: linear-gradient(to bottom, black, transparent 85%);
+  pointer-events: none;
+  animation: qpa-footer-grid-drift 18s linear infinite;
+}
+
+.qpa-footer-glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(70px);
+  pointer-events: none;
+  will-change: transform;
+}
+
+.qpa-footer-glow-one {
+  width: 220px;
+  height: 220px;
+  top: -120px;
+  left: 20%;
+  background: rgba(103, 92, 255, 0.12);
+  animation: qpa-footer-glow-one 9s ease-in-out infinite;
+}
+
+.qpa-footer-glow-two {
+  width: 260px;
+  height: 260px;
+  right: 10%;
+  bottom: -170px;
+  background: rgba(139, 92, 246, 0.12);
+  animation: qpa-footer-glow-two 11s ease-in-out infinite;
+}
+
+/* =========================================================
+   FOOTER TOP
+   ========================================================= */
+
+.qpa-footer-top {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 1.7fr repeat(3, 1fr);
+  gap: 55px;
+}
+
+/* =========================================================
+   BRAND
+   ========================================================= */
+
+.qpa-footer-brand {
+  max-width: 350px;
+  animation: qpa-footer-fade-up 650ms ease both;
+}
+
+.qpa-footer-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  color: #fff;
+  text-decoration: none;
+  outline: none;
+}
+
+.qpa-footer-logo-mark {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #675cff, #8b5cf6);
+  box-shadow: 0 10px 28px rgba(103, 92, 255, 0.28);
+  font-size: 1.25rem;
+  font-weight: 900;
+  transition:
+    transform var(--qpa-transition),
+    box-shadow var(--qpa-transition);
+}
+
+.qpa-footer-logo:hover .qpa-footer-logo-mark {
+  transform: translateY(-3px) rotate(-9deg);
+  box-shadow: 0 14px 34px rgba(103, 92, 255, 0.38);
+}
+
+.qpa-footer-logo:focus-visible {
+  border-radius: 10px;
+  box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.22);
+}
+
+.qpa-footer-logo span:last-child {
+  display: flex;
+  flex-direction: column;
+}
+
+.qpa-footer-logo strong {
+  font-size: 1.1rem;
+  letter-spacing: 0.03em;
+}
+
+.qpa-footer-logo small {
+  margin-top: 2px;
+  color: rgba(255, 255, 255, 0.52);
+  font-size: 0.65rem;
+}
+
+.qpa-footer-brand > p {
+  margin: 22px 0 0;
+  color: rgba(255, 255, 255, 0.57);
+  font-size: 0.86rem;
+  line-height: 1.8;
+}
+
+/* =========================================================
+   SOCIALS
+   ========================================================= */
+
+.qpa-footer-socials {
+  display: flex;
+  gap: 9px;
+  margin-top: 24px;
+}
+
+.qpa-footer-socials a {
+  position: relative;
+  overflow: hidden;
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 11px;
+  background: rgba(255, 255, 255, 0.035);
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 0.61rem;
+  font-weight: 800;
+  text-decoration: none;
+  outline: none;
+  transition:
+    transform var(--qpa-transition),
+    color var(--qpa-transition),
+    background var(--qpa-transition),
+    border-color var(--qpa-transition),
+    box-shadow var(--qpa-transition);
+}
+
+.qpa-footer-socials a::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    120deg,
+    transparent 25%,
+    rgba(255, 255, 255, 0.16) 50%,
+    transparent 75%
+  );
+  transform: translateX(-130%);
+  transition: transform 600ms ease;
+}
+
+.qpa-footer-socials a:hover {
+  transform: translateY(-4px);
+  border-color: rgba(139, 92, 246, 0.45);
+  background: rgba(103, 92, 255, 0.14);
+  color: #fff;
+  box-shadow: 0 10px 24px rgba(103, 92, 255, 0.14);
+}
+
+.qpa-footer-socials a:hover::before {
+  transform: translateX(130%);
+}
+
+.qpa-footer-socials a:focus-visible {
+  color: #fff;
+  border-color: rgba(139, 92, 246, 0.6);
+  box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.16);
+}
+
+/* =========================================================
+   FOOTER COLUMNS
+   ========================================================= */
+
+.qpa-footer-column {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  animation: qpa-footer-fade-up 650ms ease both;
+}
+
+.qpa-footer-column:nth-child(2) {
+  animation-delay: 80ms;
+}
+
+.qpa-footer-column:nth-child(3) {
+  animation-delay: 160ms;
+}
+
+.qpa-footer-column:nth-child(4) {
+  animation-delay: 240ms;
+}
+
+.qpa-footer-column h3 {
+  margin: 3px 0 20px;
+  color: #fff;
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.qpa-footer-column a {
+  position: relative;
+  margin-bottom: 12px;
+  color: rgba(255, 255, 255, 0.53);
+  font-size: 0.8rem;
+  text-decoration: none;
+  outline: none;
+  transition:
+    color var(--qpa-transition),
+    transform var(--qpa-transition);
+}
+
+.qpa-footer-column a::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  width: 0;
+  height: 1px;
+  background: linear-gradient(90deg, #675cff, #8b5cf6);
+  transition: width 0.3s ease;
+}
+
+.qpa-footer-column a:hover {
+  color: #fff;
+  transform: translateX(3px);
+}
+
+.qpa-footer-column a:hover::before {
+  width: 100%;
+}
+
+.qpa-footer-column a:focus-visible {
+  color: #fff;
+  border-radius: 4px;
+  box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.14);
+}
+
+/* =========================================================
+   DIVIDER
+   ========================================================= */
+
+.qpa-footer-divider {
+  position: relative;
+  z-index: 1;
+  height: 1px;
+  margin: 60px 0 23px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.1) 20%,
+    rgba(255, 255, 255, 0.1) 80%,
+    transparent
+  );
+}
+
+/* =========================================================
+   FOOTER BOTTOM
+   ========================================================= */
+
+.qpa-footer-bottom {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  gap: 25px;
+  align-items: center;
+}
+
+.qpa-footer-bottom p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 0.7rem;
+}
+
+.qpa-footer-legal {
+  display: flex;
+  gap: 20px;
+}
+
+.qpa-footer-legal a {
+  position: relative;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 0.7rem;
+  text-decoration: none;
+  outline: none;
+  transition: color var(--qpa-transition);
+}
+
+.qpa-footer-legal a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -3px;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.3s ease;
+}
+
+.qpa-footer-legal a:hover {
+  color: #fff;
+}
+
+.qpa-footer-legal a:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+.qpa-footer-legal a:focus-visible {
+  color: #fff;
+  border-radius: 4px;
+  box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.14);
+}
+
+/* =========================================================
+   REUSABLE SECTION HEADING
+   ========================================================= */
+
+.qpa-reusable-heading {
+  max-width: 700px;
+}
+
+.qpa-reusable-heading h2 {
+  margin: 0;
+  font-size: clamp(2.1rem, 4vw, 3.6rem);
+  line-height: 1.08;
+  letter-spacing: -0.045em;
+}
+
+.qpa-reusable-heading p {
+  max-width: 580px;
+  margin: 20px 0 0;
+  color: var(--qpa-text-muted);
+  font-size: 0.98rem;
+  line-height: 1.8;
+}
+
+.qpa-heading-center {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+.qpa-heading-center .qpa-section-eyebrow {
+  justify-content: center;
+}
+
+.qpa-heading-center p {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* =========================================================
+   LOADING
+   ========================================================= */
+
+.qpa-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 11px;
+  min-height: 100px;
+  color: var(--qpa-text-muted);
+}
+
+.qpa-spinner {
+  display: block;
+  width: 22px;
+  height: 22px;
+  border: 2px solid rgba(103, 92, 255, 0.18);
+  border-top-color: var(--qpa-primary);
+  border-radius: 50%;
+  animation: qpa-spinner-rotate 0.8s linear infinite;
+}
+
+.qpa-loading-small .qpa-spinner {
+  width: 17px;
+  height: 17px;
+}
+
+.qpa-loading-large .qpa-spinner {
+  width: 32px;
+  height: 32px;
+  border-width: 3px;
+}
+
+.qpa-loading-text {
+  font-size: 0.8rem;
+  font-weight: 650;
+}
+
+@keyframes qpa-spinner-rotate {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* =========================================================
+   EMPTY STATE
+   ========================================================= */
+
+.qpa-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 260px;
+  padding: 35px;
+  border: 1px dashed rgba(20, 20, 45, 0.13);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.55);
+  text-align: center;
+  animation: qpa-empty-state-in 550ms ease both;
+  transition:
+    border-color var(--qpa-transition),
+    box-shadow var(--qpa-transition),
+    transform var(--qpa-transition);
+}
+
+.qpa-empty-state:hover {
+  border-color: rgba(103, 92, 255, 0.25);
+  box-shadow: 0 16px 38px rgba(20, 20, 45, 0.06);
+  transform: translateY(-2px);
+}
+
+.qpa-empty-icon {
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 16px;
+  border-radius: 16px;
+  background: rgba(103, 92, 255, 0.08);
+  color: var(--qpa-primary);
+  font-size: 1.2rem;
+  font-weight: 800;
+  transition:
+    transform var(--qpa-transition),
+    box-shadow var(--qpa-transition);
+}
+
+.qpa-empty-state:hover .qpa-empty-icon {
+  transform: translateY(-3px) scale(1.04);
+  box-shadow: 0 10px 24px rgba(103, 92, 255, 0.1);
+}
+
+.qpa-empty-state h3 {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.qpa-empty-state p {
+  max-width: 400px;
+  margin: 9px 0 0;
+  color: var(--qpa-text-muted);
+  font-size: 0.82rem;
+  line-height: 1.65;
+}
+
+.qpa-empty-action {
+  margin-top: 20px;
+}
+
+/* =========================================================
+   ANIMATIONS
+   ========================================================= */
+
+@keyframes qpa-footer-grid-drift {
+  from {
+    background-position: 0 0, 0 0;
+  }
+
+  to {
+    background-position: 60px 60px, 60px 60px;
+  }
+}
+
+@keyframes qpa-footer-glow-one {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+
+  50% {
+    transform: translate3d(25px, 18px, 0);
+  }
+}
+
+@keyframes qpa-footer-glow-two {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+
+  50% {
+    transform: translate3d(-20px, -22px, 0);
+  }
+}
+
+@keyframes qpa-footer-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes qpa-empty-state-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 900px) {
+  .qpa-footer-top {
+    grid-template-columns: 1.4fr 1fr 1fr;
+    gap: 40px;
+  }
+
+  .qpa-footer-brand {
+    grid-column: 1 / -1;
+    max-width: 550px;
+  }
+}
+
+@media (max-width: 620px) {
+  .qpa-footer {
+    padding: 65px 0 25px;
+  }
+
+  .qpa-footer-top {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 40px 25px;
+  }
+
+  .qpa-footer-brand {
+    grid-column: 1 / -1;
+  }
+
+  .qpa-footer-bottom {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 17px;
+  }
+
+  .qpa-footer-divider {
+    margin-top: 45px;
+  }
+
+  .qpa-reusable-heading h2 {
+    font-size: 2.1rem;
+  }
+
+  .qpa-reusable-heading p {
+    margin-top: 15px;
+    font-size: 0.9rem;
+  }
+
+  .qpa-empty-state {
+    min-height: 230px;
+    padding: 25px;
+  }
+}
+
+@media (max-width: 400px) {
+  .qpa-footer-top {
+    grid-template-columns: 1fr;
+  }
+
+  .qpa-footer-column {
+    grid-column: auto;
+  }
+
+  .qpa-footer-legal {
+    flex-wrap: wrap;
+    gap: 12px 18px;
+  }
+
+  .qpa-footer-brand > p {
+    font-size: 0.82rem;
+  }
+
+  .qpa-footer-glow-one {
+    left: -80px;
+  }
+
+  .qpa-footer-glow-two {
+    right: -100px;
+  }
+}
+
+/* =========================================================
+   ACCESSIBILITY / REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .qpa-footer::before,
+  .qpa-footer-glow-one,
+  .qpa-footer-glow-two,
+  .qpa-spinner,
+  .qpa-footer-brand,
+  .qpa-footer-column,
+  .qpa-empty-state {
+    animation: none !important;
+  }
+
+  .qpa-footer-logo-mark,
+  .qpa-footer-socials a,
+  .qpa-footer-socials a::before,
+  .qpa-footer-column a,
+  .qpa-footer-column a::before,
+  .qpa-footer-legal a,
+  .qpa-footer-legal a::after,
+  .qpa-empty-state,
+  .qpa-empty-icon {
+    transition: none !important;
+  }
+
+  .qpa-footer-socials a:hover,
+  .qpa-footer-column a:hover,
+  .qpa-empty-state:hover,
+  .qpa-empty-state:hover .qpa-empty-icon,
+  .qpa-footer-logo:hover .qpa-footer-logo-mark {
+    transform: none !important;
+  }
+
+  .qpa-footer-socials a::before {
+    display: none;
+  }
+}
