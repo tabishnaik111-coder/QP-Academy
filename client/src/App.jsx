@@ -2,6 +2,8 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import { AuthProvider } from "./context/AuthContext";
 
+import { Analytics } from "@vercel/analytics/react";
+
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -244,6 +246,7 @@ const App = () => {
           />
           <Route path="/email" element={<Email />} />
         </Routes>
+        <Analytics />
       </AuthProvider>
     </BrowserRouter>
   );
