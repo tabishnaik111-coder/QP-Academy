@@ -989,30 +989,15 @@
 .qpa-progress-value {
   width: 0;
   height: 100%;
-
-  border-radius:
-    inherit;
-
-  background:
-    var(--qpa-gradient-primary);
-
+  border-radius: inherit;
+  background: var(--qpa-gradient-primary);
   box-shadow:
     0 0 14px
     rgba(99, 91, 255, 0.16);
-
-  animation:
-    qpa-progress-grow 1.2s ease both;
+  transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-@keyframes qpa-progress-grow {
-  from {
-    width: 0;
-  }
 
-  to {
-    width: 100;
-  }
-}
 
 
 /* =========================================================
