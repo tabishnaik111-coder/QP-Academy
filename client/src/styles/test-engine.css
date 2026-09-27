@@ -578,18 +578,19 @@
 .test-start-info i {
   color:
     var(--qpa-primary);
-    
-    
-    /* =========================================================
+}
+
+
+/* =========================================================
    TEST WORKSPACE
 ========================================================= */
 
 .test-workspace {
   display:
-  grid;
-  
+    grid;
+
   gap:
-  1.2rem;
+    1.2rem;
 }
 
 
@@ -601,19 +602,18 @@
 .test-input-card {
   position:
     relative;
-    
+
   overflow:
     hidden;
 
   border:
     1px solid var(--qpa-border);
 
-    border-radius:
+  border-radius:
     var(--qpa-radius-lg);
 
-    background:
+  background:
     var(--qpa-surface);
-  }
 
   box-shadow:
     var(--qpa-shadow);
