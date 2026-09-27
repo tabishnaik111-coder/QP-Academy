@@ -55,6 +55,8 @@ export const getTestById = async (req, res) => {
         title: test.title,
         type: test.type,
         content: test.content,
+        audioUrl: test.audioUrl || null,
+        baseWpm: test.baseWpm || 60,
         durationSeconds: test.durationSeconds,
         difficulty: test.difficulty,
       },
@@ -72,6 +74,11 @@ export const getTestById = async (req, res) => {
 export const startTest = async (req, res) => {
   try {
     const { testId } = req.params;
+
+    // Student-chosen dictation speed / typing duration from the
+    // "listening setup" screen. Both are optional and always clamped
+    // server-side so a tampered request can't grant extra time.
+    const { wpm, durationSeconds } = req.body || {};
 
     const test = await Test.findOne({
       _id: testId,
@@ -113,11 +120,28 @@ export const startTest = async (req, res) => {
           id: activeSession._id,
           startedAt: activeSession.startedAt,
           durationSeconds:
-            activeSession.durationSeconds,
+            activeSession.allottedSeconds ||
+            activeSession.durationSeconds ||
+            test.durationSeconds,
+          selectedWpm:
+            activeSession.selectedWpm || test.baseWpm,
           typedText: activeSession.typedText,
         },
       });
     }
+
+    // Clamp the requested duration to (1s, test.durationSeconds].
+    const requestedDuration = Number(durationSeconds);
+    const allottedSeconds =
+      Number.isFinite(requestedDuration) && requestedDuration > 0
+        ? Math.min(requestedDuration, test.durationSeconds)
+        : test.durationSeconds;
+
+    const requestedWpm = Number(wpm);
+    const selectedWpm =
+      Number.isFinite(requestedWpm) && requestedWpm > 0
+        ? requestedWpm
+        : test.baseWpm;
 
     const session = await TestSession.create({
       user: req.user._id,
@@ -126,6 +150,8 @@ export const startTest = async (req, res) => {
       type: test.type,
       sourceContent: test.content,
       startedAt: new Date(),
+      allottedSeconds,
+      selectedWpm,
       durationSeconds: 0,
       typedText: "",
       completionStatus: "in_progress",
@@ -137,8 +163,8 @@ export const startTest = async (req, res) => {
       session: {
         id: session._id,
         startedAt: session.startedAt,
-        durationSeconds:
-          test.durationSeconds,
+        durationSeconds: allottedSeconds,
+        selectedWpm,
       },
     });
   } catch (error) {
@@ -189,9 +215,15 @@ export const submitTest = async (req, res) => {
       )
     );
 
+    // Cap elapsed time to whatever duration the student actually
+    // chose at start (falls back to the test's max if that field
+    // isn't set, e.g. for sessions created before this change).
+    const allottedSeconds =
+      session.allottedSeconds || test.durationSeconds;
+
     const actualDurationSeconds = Math.min(
       elapsedSeconds,
-      test.durationSeconds
+      allottedSeconds
     );
 
     const safeTypedText =
@@ -262,6 +294,7 @@ export const submitTest = async (req, res) => {
       result: {
         id: testResult._id,
         sessionId: session._id,
+        typedText: session.typedText,
         durationSeconds:
           session.durationSeconds,
         correctCharacters:
