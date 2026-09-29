@@ -44,24 +44,6 @@ const testSessionSchema = new mongoose.Schema(
       default: null,
     },
 
-    // The student's chosen typing duration from the listening-setup
-    // screen (clamped server-side to Test.durationSeconds). Used by
-    // submitTest to cap elapsed time instead of always allowing the
-    // test's full max duration.
-    allottedSeconds: {
-      type: Number,
-      default: null,
-      min: 0,
-    },
-
-    // The dictation playback speed (WPM) the student selected before
-    // starting, kept for the record / leaderboard context.
-    selectedWpm: {
-      type: Number,
-      default: null,
-      min: 0,
-    },
-
     durationSeconds: {
       type: Number,
       default: 0,

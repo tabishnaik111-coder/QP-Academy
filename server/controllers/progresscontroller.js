@@ -117,7 +117,16 @@ export const getCourseProgress = async (
       (module) => module._id
     );
 
-    // Lessons are connected through Lesson.module.
+    /*
+     * Lessons are connected through Lesson.module.
+     *
+     * `transcript` is selected here ONLY so its word count can be
+     * computed below. The raw transcript text is stripped back out
+     * before the response is sent — the browser must never receive
+     * the authoritative dictation transcript, only how many words
+     * it contains (needed for the typing word-cap / "Words Left"
+     * counter on the frontend).
+     */
     const lessons = await Lesson.find({
       module: {
         $in: moduleIds,
@@ -125,7 +134,7 @@ export const getCourseProgress = async (
       published: { $ne: false },
     })
       .select(
-        "module title description type content audioUrl duration order"
+        "module title description type content audioUrl duration wpm order transcript"
       )
       .sort({
         order: 1,
@@ -158,17 +167,36 @@ export const getCourseProgress = async (
           ...module,
 
           lessons: moduleLessons.map(
-            (lesson) => ({
-              ...lesson,
+            (lesson) => {
+              const {
+                transcript,
+                ...safeLesson
+              } = lesson;
 
-              progress:
-                progressMap.get(
-                  lesson._id.toString()
-                ) || {
-                  completed: false,
-                  progressPercentage: 0,
-                },
-            })
+              const transcriptWordCount =
+                lesson.type === "dictation" &&
+                typeof transcript === "string" &&
+                transcript.trim()
+                  ? transcript
+                      .trim()
+                      .split(/\s+/)
+                      .filter(Boolean).length
+                  : undefined;
+
+              return {
+                ...safeLesson,
+
+                transcriptWordCount,
+
+                progress:
+                  progressMap.get(
+                    lesson._id.toString()
+                  ) || {
+                    completed: false,
+                    progressPercentage: 0,
+                  },
+              };
+            }
           ),
         };
       }
@@ -470,19 +498,15 @@ export const submitDictation = async (
      * the typing time at 5 seconds and inflate the WPM.
      */
 
-    const safeDuration = Math.min(
-      lesson.duration > 0
-        ? lesson.duration * 60
-        : Number.MAX_SAFE_INTEGER,
-      Math.max(
-        1,
-        Number.isFinite(
-          numericDuration
-        )
-          ? numericDuration
-          : 1
-      )
-    );
+    const MAX_TYPING_SECONDS = 60 * 60; // keep in sync with ABSOLUTE_MAX_MINUTES on the frontend
+
+const safeDuration = Math.min(
+  MAX_TYPING_SECONDS,
+  Math.max(
+    1,
+    Number.isFinite(numericDuration) ? Math.round(numericDuration) : 1
+  )
+);
 
     const result =
       calculateTestResult({
@@ -829,31 +853,6 @@ export const getLatestDictationResult = async (
  *
  * This prevents unauthorized users from
  * directly accessing paid dictation audio.
- */
-
-/*
- * =========================================
- * STREAM DICTATION AUDIO
- * =========================================
- *
- * Audio files are stored on the backend:
- *
- * server/
- * └── uploads/
- *     └── dictations/
- *
- * Example:
- * dictation-001.mp3
- *
- * The browser does not receive a public
- * filesystem URL.
- *
- * Access is checked through:
- * 1. Authentication
- * 2. Dictation lesson
- * 3. Module
- * 4. Published course
- * 5. Active/completed enrollment
  */
 
 export const streamDictationAudio = async (

@@ -65,6 +65,26 @@ const lessonSchema = new mongoose.Schema(
       trim: true,
     },
 
+    /*
+     * =========================================
+     * DICTATION RECORDING SPEED
+     * =========================================
+     *
+     * Only meaningful when type === "dictation".
+     * The words-per-minute the audioUrl file was
+     * actually recorded/spoken at. The frontend
+     * divides a student's chosen WPM by this to
+     * set the audio's playbackRate (e.g. choosing
+     * 95 WPM on a lesson recorded at 60 WPM plays
+     * back at 95 / 60 = 1.58x).
+     */
+
+    wpm: {
+      type: Number,
+      default: 60,
+      min: [1, "wpm must be at least 1"],
+    },
+
     duration: {
       type: Number,
       default: 0,

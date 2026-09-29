@@ -2,6 +2,23 @@ import Course from "../models/Course.js";
 import Module from "../models/Module.js";
 import Lesson from "../models/Lesson.js";
 
+/*
+ * Recorded speed of a dictation audio file, in words per minute.
+ * Only meaningful for dictation lessons; everything else is stored
+ * as the default (60). Always a whole number of at least 1.
+ */
+const sanitizeWpm = (type, wpm) => {
+  if (type !== "dictation") {
+    return 60;
+  }
+
+  const numeric = Math.round(Number(wpm));
+
+  return Number.isFinite(numeric) && numeric >= 1
+    ? numeric
+    : 60;
+};
+
 /* =========================================
    MODULES
 ========================================= */
@@ -267,6 +284,7 @@ export const createLesson = async (
       content = "",
       transcript = "",
       audioUrl = "",
+      wpm = 60,
       duration = 0,
       order = 0,
       published = true,
@@ -303,6 +321,7 @@ export const createLesson = async (
       content,
       transcript: safeTranscript,
       audioUrl: audioUrl.trim(),
+      wpm: sanitizeWpm(type, wpm),
       duration:
         Number(duration) || 0,
       order: Number(order) || 0,
@@ -341,6 +360,7 @@ export const updateLesson = async (
       content = "",
       transcript = "",
       audioUrl = "",
+      wpm = 60,
       duration = 0,
       order = 0,
       published = true,
@@ -368,6 +388,7 @@ export const updateLesson = async (
           content,
           transcript: safeTranscript,
           audioUrl: audioUrl.trim(),
+          wpm: sanitizeWpm(type, wpm),
           duration:
             Number(duration) || 0,
           order: Number(order) || 0,

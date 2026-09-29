@@ -193,7 +193,9 @@ const AdminDashboard = () => {
     description: "",
     type: "lesson",
     content: "",
+    transcript: "",
     audioUrl: "",
+    wpm: 60,
     duration: 0,
     order: 0,
   });
@@ -967,6 +969,7 @@ const resetLessonForm = () => {
     content: "",
     transcript: "",
     audioUrl: "",
+    wpm: 60,
     duration: 0,
     order: lessons.length,
   });
@@ -980,8 +983,9 @@ const resetLessonForm = () => {
     setLessonForm((current) => ({
       ...current,
       [name]:
-        name === "duration" ||
-        name === "order"
+                name === "duration" ||
+        name === "order" ||
+        name === "wpm"
           ? Number(value)
           : value,
     }));
@@ -1008,6 +1012,7 @@ const resetLessonForm = () => {
   content: "",
   transcript: "",
   audioUrl: "",
+  wpm: 60,
   duration: 0,
   order: lessons.length,
 });
@@ -1039,6 +1044,9 @@ const resetLessonForm = () => {
 
     audioUrl:
       lesson.audioUrl || "",
+
+    wpm:
+      lesson.wpm || 60,
 
     duration:
       lesson.duration || 0,
@@ -1107,6 +1115,11 @@ const resetLessonForm = () => {
     lessonForm.type === "dictation"
       ? lessonForm.audioUrl.trim()
       : "",
+
+  wpm:
+    lessonForm.type === "dictation"
+      ? Math.max(1, Number(lessonForm.wpm) || 60)
+      : 60,
 
   duration:
     Number(lessonForm.duration) || 0,
@@ -3351,6 +3364,33 @@ const resetLessonForm = () => {
     autoComplete="off"
     disabled={lessonForm.type !== "dictation"}
   />
+
+                      {lessonForm.type === "dictation" && (
+                      <div className="qpa-form-group">
+
+                        <label htmlFor="lesson-wpm">
+                          Recorded Speed (WPM)
+                        </label>
+
+                        <input
+                          id="lesson-wpm"
+                          name="wpm"
+                          type="number"
+                          min="1"
+                          value={lessonForm.wpm}
+                          onChange={handleLessonChange}
+                          placeholder="60"
+                        />
+
+                        <small className="admin-form-help">
+                          The words-per-minute this audio file was
+                          actually recorded at. Students choose a
+                          faster or slower speed, and playback is
+                          adjusted relative to this value.
+                        </small>
+
+                      </div>
+                    )}
 
   <small className="admin-form-help">
     Enter the exact MP3 filename stored in

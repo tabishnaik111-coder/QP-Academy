@@ -36,27 +36,11 @@ const testSchema = new mongoose.Schema(
       trim: true,
     },
 
-    // Only used when type === "dictation". URL to the audio file the
-    // student listens to before typing.
-    audioUrl: {
-      type: String,
-      default: null,
-      trim: true,
-    },
-
-    // The WPM the dictation audio was actually recorded/spoken at.
-    // The frontend divides a student's chosen WPM by this to get the
-    // audio's playbackRate (e.g. 95 / 60 = 1.58x).
-    baseWpm: {
-      type: Number,
-      default: 60,
-      min: [1, "baseWpm must be at least 1"],
-    },
-
     durationSeconds: {
       type: Number,
       required: true,
       min: [1, "Test duration must be at least 1 second"],
+      max: [3600, "Test duration cannot exceed 60 minutes"],
     },
 
     difficulty: {

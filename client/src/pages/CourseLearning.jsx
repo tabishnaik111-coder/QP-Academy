@@ -11,48 +11,36 @@ import {
   getLatestDictationResult,
 } from "../services/api";
 
-const getDictationWordClassName = (classification) => {
-  switch (classification) {
-    case "correct":
-      return "dictation-word-correct";
+/* =========================================================
+   DICTATION FLOW CONSTANTS
+   ========================================================= */
 
-    case "half":
-      return "dictation-word-half";
+// Fallback recorded speed for lessons that have no `wpm` saved.
+// Selecting a faster/slower WPM sets
+// audio.playbackRate = chosenWpm / recordedWpm (lesson.wpm).
+const BASE_WPM = 60;
 
-    case "full":
-      return "dictation-word-full";
+// Typing time limits (minutes). The student can pick anything
+// between MIN_TYPING_MINUTES and ABSOLUTE_MAX_MINUTES.
+const MIN_TYPING_MINUTES = 1;
+const ABSOLUTE_MAX_MINUTES = 60;
 
-    case "missing":
-      return "dictation-word-missing";
+const MIN_TYPING_SECONDS = MIN_TYPING_MINUTES * 60;
+const MAX_TYPING_SECONDS = ABSOLUTE_MAX_MINUTES * 60;
 
-    case "extra":
-      return "dictation-word-extra";
+const WPM_OPTIONS = [60, 70, 80, 95, 110, 120, 130, 150, 170];
 
-    default:
-      return "";
-  }
-};
+// How long a student gets with their notes before typing auto-opens.
+const NOTES_COUNTDOWN_SECONDS = 5 * 60;
 
-const getDictationWordLabel = (classification) => {
-  switch (classification) {
-    case "correct":
-      return "Correct";
-
-    case "half":
-      return "Half Mistake";
-
-    case "full":
-      return "Full Mistake";
-
-    case "missing":
-      return "Missing";
-
-    case "extra":
-      return "Extra";
-
-    default:
-      return "Unknown";
-  }
+const formatClock = (totalSeconds) => {
+  const safe = Math.max(0, Math.floor(totalSeconds || 0));
+  const minutes = Math.floor(safe / 60);
+  const seconds = safe % 60;
+  return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(
+    2,
+    "0"
+  )}`;
 };
 
 const CourseLearning = () => {
@@ -71,12 +59,28 @@ const CourseLearning = () => {
    * =========================================
    * DICTATION STATE
    * =========================================
+   *
+   * stage: "setup" | "notes" | "duration" | "typing" | "result"
    */
 
-  const [dictationFinished, setDictationFinished] = useState(false);
-  const [typingStarted, setTypingStarted] = useState(false);
+  const [stage, setStage] = useState("setup");
   const [typedText, setTypedText] = useState("");
   const [dictationResult, setDictationResult] = useState(null);
+
+  // Listening-setup controls
+  const [selectedWpm, setSelectedWpm] = useState(BASE_WPM);
+  const [durationMinutes, setDurationMinutes] = useState(MIN_TYPING_MINUTES);
+  const [durationSeconds, setDurationSeconds] = useState(0);
+
+  // Notes countdown
+  const [notesRemaining, setNotesRemaining] = useState(
+    NOTES_COUNTDOWN_SECONDS
+  );
+
+  // Typing timer
+  const [hasStartedTyping, setHasStartedTyping] = useState(false);
+  const [typingTimeRemaining, setTypingTimeRemaining] = useState(0);
+  const [timeUp, setTimeUp] = useState(false);
 
   /*
    * =========================================
@@ -168,16 +172,28 @@ const CourseLearning = () => {
    */
 
   useEffect(() => {
-    setDictationFinished(false);
-    setTypingStarted(false);
+    setStage("setup");
     setTypedText("");
     setDictationResult(null);
+    setHasStartedTyping(false);
+    setTimeUp(false);
+    setNotesRemaining(NOTES_COUNTDOWN_SECONDS);
+    setError("");
 
     typingStartedAtRef.current = null;
 
     if (audioRef.current) {
       audioRef.current.pause();
       audioRef.current.currentTime = 0;
+    }
+
+    if (selectedLesson?.type === "dictation") {
+      // Typing time starts at the minimum; the student picks
+      // anything from the minimum up to the maximum.
+      setDurationMinutes(MIN_TYPING_MINUTES);
+      setDurationSeconds(0);
+      setSelectedWpm(selectedLesson.wpm || BASE_WPM);
+      setTypingTimeRemaining(MIN_TYPING_SECONDS);
     }
   }, [selectedLesson?._id]);
 
@@ -203,17 +219,6 @@ const CourseLearning = () => {
       return;
     }
 
-    setDictationFinished(false);
-    setTypingStarted(false);
-    setTypedText("");
-    setDictationResult(null);
-    setError("");
-
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current.currentTime = 0;
-    }
-
     if (selectedLesson.type === "dictation") {
       getLatestDictationResult(selectedLesson._id)
         .then((data) => {
@@ -223,6 +228,7 @@ const CourseLearning = () => {
             data?.result
           ) {
             setDictationResult(data.result);
+            setStage("result");
           }
         })
         .catch((error) => {
@@ -247,6 +253,29 @@ const CourseLearning = () => {
     isDictationLesson &&
     Boolean(selectedLesson?.audioUrl?.trim());
 
+  const targetWordCount =
+    isDictationLesson && selectedLesson?.transcriptWordCount
+      ? selectedLesson.transcriptWordCount
+      : null;
+
+  // Speed the audio file was actually recorded at (Lesson.wpm).
+  const recordedWpm =
+    selectedLesson?.wpm > 0 ? selectedLesson.wpm : BASE_WPM;
+
+  // Speed choices always include the recorded speed itself (1.00x).
+  const wpmOptions = Array.from(
+    new Set([...WPM_OPTIONS, recordedWpm])
+  ).sort((a, b) => a - b);
+
+  // Longest / shortest typing time the student may pick (seconds).
+  const maxDurationSeconds = MAX_TYPING_SECONDS;
+  const minDurationSeconds = MIN_TYPING_SECONDS;
+
+  const selectedDurationTotal = Math.min(
+    durationMinutes * 60 + durationSeconds,
+    maxDurationSeconds
+  );
+
   /*
    * =========================================
    * PROTECTED DICTATION AUDIO URL
@@ -267,15 +296,75 @@ const CourseLearning = () => {
 
   /*
    * =========================================
-   * DICTATION AUDIO ENDED
+   * LISTENING SETUP
    * =========================================
    */
 
-  const handleDictationEnded = () => {
-    setDictationFinished(true);
-    setTypingStarted(false);
-    setError("");
+  const applyPlaybackRate = (wpm = selectedWpm) => {
+    if (audioRef.current) {
+      const rate = wpm / recordedWpm;
+      audioRef.current.defaultPlaybackRate = rate;
+      audioRef.current.playbackRate = rate;
+    }
   };
+
+  const handleWpmChange = (event) => {
+    const wpm = Number(event.target.value);
+    setSelectedWpm(wpm);
+    applyPlaybackRate(wpm);
+  };
+
+  const enterNotesStage = () => {
+    setNotesRemaining(NOTES_COUNTDOWN_SECONDS);
+    setStage("notes");
+  };
+
+  // Audio finished -> "Dictation completed" popup.
+  const handleDictationEnded = () => {
+    setError("");
+    enterNotesStage();
+  };
+
+  // "Start Typing Now" (or the countdown reaching 0) -> the popup
+  // where the student picks how long they want to type.
+  const enterDurationStage = () => {
+    setError("");
+    setStage("duration");
+  };
+
+  // Keeps minutes:seconds from going below 00:00 or above the
+  // maximum (60:00). The minimum (01:00) is enforced when the
+  // student presses "Start Typing", so typing a new number in the
+  // minutes box is never interrupted.
+  const applyDuration = (minutes, seconds) => {
+    const total = Math.max(
+      0,
+      Math.min(
+        Math.floor(Number(minutes) || 0) * 60 +
+          Math.floor(Number(seconds) || 0),
+        maxDurationSeconds
+      )
+    );
+
+    setDurationMinutes(Math.floor(total / 60));
+    setDurationSeconds(total % 60);
+  };
+
+  useEffect(() => {
+    if (stage !== "notes") return undefined;
+
+    if (notesRemaining <= 0) {
+      enterDurationStage();
+      return undefined;
+    }
+
+    const timer = window.setInterval(() => {
+      setNotesRemaining((current) => Math.max(0, current - 1));
+    }, 1000);
+
+    return () => window.clearInterval(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [stage, notesRemaining]);
 
   /*
    * =========================================
@@ -288,6 +377,15 @@ const CourseLearning = () => {
       return;
     }
 
+    if (selectedDurationTotal < minDurationSeconds) {
+      setError(
+        `Please choose a typing time of at least ${formatClock(
+          minDurationSeconds
+        )}.`
+      );
+      return;
+    }
+
     if (!hasDictationAudio) {
       setError(
         "Dictation audio is not available."
@@ -297,12 +395,14 @@ const CourseLearning = () => {
     }
 
     setError("");
-    setDictationFinished(false);
-    setTypingStarted(true);
+    setStage("typing");
     setTypedText("");
     setDictationResult(null);
+    setHasStartedTyping(false);
+    setTimeUp(false);
+    setTypingTimeRemaining(selectedDurationTotal);
 
-    typingStartedAtRef.current = Date.now();
+    typingStartedAtRef.current = null;
 
     window.setTimeout(() => {
       typingInputRef.current?.focus();
@@ -313,9 +413,9 @@ const CourseLearning = () => {
    * =========================================
    * TRY THE DICTATION AGAIN
    *
-   * Clears the current attempt so the audio player
-   * and the typing flow appear again. Every attempt
-   * is saved separately, so nothing is lost.
+   * Clears the current attempt so the listening setup and
+   * the typing flow appear again. Every attempt is saved
+   * separately, so nothing is lost.
    * =========================================
    */
 
@@ -329,8 +429,9 @@ const CourseLearning = () => {
 
     setError("");
     setTypedText("");
-    setTypingStarted(false);
-    setDictationFinished(false);
+    setHasStartedTyping(false);
+    setTimeUp(false);
+    setStage("setup");
     setDictationResult(null);
 
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -343,7 +444,29 @@ const CourseLearning = () => {
    */
 
   const handleTypingChange = (event) => {
-    setTypedText(event.target.value);
+    const value = event.target.value;
+
+    if (!hasStartedTyping && value.length > 0) {
+      setHasStartedTyping(true);
+      typingStartedAtRef.current = Date.now();
+    }
+
+    // Block adding a brand-new word once the transcript's word count
+    // is reached — editing/deleting inside the last word still works.
+    if (targetWordCount) {
+      const words = value.trim()
+        ? value.trim().split(/\s+/)
+        : [];
+
+      if (
+        words.length > targetWordCount &&
+        value.length > typedText.length
+      ) {
+        return;
+      }
+    }
+
+    setTypedText(value);
 
     if (dictationResult) {
       setDictationResult(null);
@@ -353,6 +476,31 @@ const CourseLearning = () => {
       setError("");
     }
   };
+
+  /*
+   * =========================================
+   * TYPING TIMER
+   * =========================================
+   */
+
+  useEffect(() => {
+    if (stage !== "typing" || !hasStartedTyping || timeUp) {
+      return undefined;
+    }
+
+    if (typingTimeRemaining <= 0) {
+      setTimeUp(true);
+      handleFinishDictation(true);
+      return undefined;
+    }
+
+    const timer = window.setInterval(() => {
+      setTypingTimeRemaining((current) => Math.max(0, current - 1));
+    }, 1000);
+
+    return () => window.clearInterval(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [stage, hasStartedTyping, timeUp, typingTimeRemaining]);
 
   /*
    * =========================================
@@ -372,7 +520,7 @@ const CourseLearning = () => {
    * =========================================
    */
 
-  const handleFinishDictation = async () => {
+  const handleFinishDictation = async (dueToTimeUp = false) => {
     if (!selectedLesson) {
       return;
     }
@@ -381,7 +529,11 @@ const CourseLearning = () => {
       return;
     }
 
-    if (!typedText.trim()) {
+    if (stage === "result") {
+      return;
+    }
+
+    if (!typedText.trim() && !dueToTimeUp) {
       setError(
         "Please type the dictation before finishing."
       );
@@ -403,18 +555,16 @@ const CourseLearning = () => {
     try {
       setError("");
 
-     const data = await submitDictation(
-  selectedLesson._id,
-  typedText,
-  elapsedSeconds
-);
+      const data = await submitDictation(
+        selectedLesson._id,
+        typedText,
+        elapsedSeconds
+      );
 
-console.log("DICTATION SUBMIT RESPONSE:", data);
+      setDictationResult(data.result);
+      setStage("result");
 
-setDictationResult(data.result);
-setTypingStarted(false);
-
-typingStartedAtRef.current = null;
+      typingStartedAtRef.current = null;
     } catch (err) {
       console.error(
         "Dictation submission error:",
@@ -787,220 +937,275 @@ typingStartedAtRef.current = null;
                   "dictation" && (
                   <div className="learning-dictation">
 
-                    {/* AUDIO */}
+                    {/* ============ LISTENING SETUP (Phase 1) ============ */}
 
-                    {!typingStarted &&
-                      !dictationFinished &&
-                      !dictationResult && (
-                        <div className="learning-placeholder">
+                    {stage === "setup" && !dictationResult && (
+                        <div className="qpa-listening-card">
 
-                          <div className="learning-placeholder-icon">
-                            <i className="fa-solid fa-headphones"></i>
+                          <div className="qpa-audio-block">
+                            <div className="qpa-audio-icon">
+                              <i className="fa-solid fa-headphones"></i>
+                            </div>
+                            <div>
+                              <span className="qpa-audio-label">
+                                Phase 1: Dictation Listening
+                              </span>
+                              <strong className="qpa-audio-title">
+                                Listen and take notes carefully.
+                              </strong>
+                            </div>
                           </div>
 
-                          <h3>
-                            Dictation lesson
-                          </h3>
-
-                          <p>
-                            Listen carefully to
-                            the complete audio
-                            before starting the
-                            typing portion.
-                          </p>
-
                           {hasDictationAudio ? (
-                            <audio
-                              ref={audioRef}
-                              className="learning-audio"
-                              controls
-                              preload="metadata"
-                              src={dictationAudioUrl}
-                              onEnded={
-                                handleDictationEnded
-                              }
-                            >
-                              Your browser does not
-                              support audio playback.
-                            </audio>
-                          ) : (
-                            <p>
-                              Dictation audio is
-                              not available for
-                              this lesson.
-                            </p>
-                          )}
+                            <>
+                              <audio
+                                ref={audioRef}
+                                className="qpa-audio-player"
+                                controls
+                                preload="metadata"
+                                src={dictationAudioUrl}
+                                onLoadedMetadata={() =>
+                                  applyPlaybackRate()
+                                }
+                                onPlay={() => applyPlaybackRate()}
+                                onEnded={handleDictationEnded}
+                              >
+                                Your browser does not
+                                support audio playback.
+                              </audio>
 
-                          {!hasDictationAudio && (
+                              <p className="qpa-audio-speed">
+                                Current Speed:{" "}
+                                {(selectedWpm / recordedWpm).toFixed(2)}x |{" "}
+                                {selectedWpm} WPM
+                              </p>
+
+                              <div className="qpa-setup-row">
+                                <div className="qpa-setup-label">
+                                  <i className="fa-solid fa-gear"></i>
+                                  Select Dictation Speed
+                                </div>
+
+                                <select
+                                  className="qpa-select"
+                                  value={selectedWpm}
+                                  onChange={handleWpmChange}
+                                >
+                                  {wpmOptions.map((wpm) => (
+                                    <option key={wpm} value={wpm}>
+                                      {wpm} WPM
+                                    </option>
+                                  ))}
+                                </select>
+                              </div>
+                            </>
+                          ) : (
                             <p
                               className="learning-error"
                               role="alert"
                             >
                               Dictation audio is not
-                              available for this
-                              lesson.
+                              available for this lesson.
                             </p>
                           )}
 
                         </div>
                       )}
 
-                    {/* AUDIO FINISHED POPUP */}
+                    {/* ============ NOTES COUNTDOWN ============ */}
 
-                    {dictationFinished &&
-                      !dictationResult && (
-                        <div
-                          className="dictation-ready-overlay"
-                          role="dialog"
-                          aria-modal="true"
-                          aria-labelledby="dictation-ready-title"
+                    {stage === "notes" && (
+                      <div className="qpa-notes-screen">
+                        <h2>Dictation completed</h2>
+                        <p>
+                          The typing page will be
+                          automatically loaded in
+                        </p>
+                        <div className="qpa-notes-countdown">
+                          {formatClock(notesRemaining)}
+                        </div>
+                        <p className="qpa-notes-hint">
+                          Till then you can relax, read
+                          your shorthand, or you can
+                          start typing right now by
+                          clicking on "Start Typing
+                          Now" button.
+                        </p>
+                        <button
+                          type="button"
+                          className="qpa-start-test-btn"
+                          onClick={enterDurationStage}
                         >
+                          Start Typing Now
+                        </button>
+                      </div>
+                    )}
 
-                          <div className="dictation-ready-popup">
+                    {/* ============ SELECT TYPING TIME ============ */}
 
-                            <div className="dictation-ready-icon">
-                              <i className="fa-solid fa-keyboard"></i>
-                            </div>
-
-                            <span className="learning-type-badge">
-                              Dictation Ready
-                            </span>
-
-                            <h3 id="dictation-ready-title">
-                              Audio finished
-                            </h3>
-
-                            <p>
-                              The dictation audio
-                              has finished. You
-                              can now start typing
-                              what you heard.
-                            </p>
-
-                            <button
-                              type="button"
-                              className="qpa-btn qpa-btn-primary"
-                              onClick={
-                                handleStartTyping
-                              }
-                              disabled={
-                                !hasDictationAudio
-                              }
-                            >
-                              Start Typing
-                              <i className="fa-solid fa-arrow-right"></i>
-                            </button>
-
-                          </div>
-
-                        </div>
-                      )}
-
-                    {/* TYPING AREA */}
-
-                    {typingStarted && (
-                      <div className="learning-typing-card">
-
-                        <div className="learning-typing-header">
-
-                          <div>
-
-                            <span>Dictation</span>
-
-                            <h3>
-                              Type what you heard
-                            </h3>
-
-                            <p>
-                              Type the complete
-                              dictation as
-                              accurately as
-                              possible.
-                            </p>
-
-                          </div>
-
-                          <div className="learning-typing-header-icon">
-                            <i className="fa-solid fa-keyboard"></i>
-                          </div>
-
+                    {stage === "duration" && (
+                      <div className="qpa-notes-screen">
+                        <div className="qpa-popup-icon">
+                          <i className="fa-solid fa-stopwatch"></i>
                         </div>
 
-                        <div className="learning-typing-status">
+                        <h2>Select your typing time</h2>
 
-                          <div>
+                        <p>
+                          Choose how long you want to take
+                          to type the dictation.
+                        </p>
 
-                            <i className="fa-solid fa-circle"></i>
+<div className="qpa-duration-inputs">
+  <input
+    type="number"
+    min="0"
+    max={ABSOLUTE_MAX_MINUTES}
+    inputMode="numeric"
+    aria-label="Minutes"
+    value={String(durationMinutes)}
+    onFocus={(e) => e.target.select()}
+    onChange={(e) =>
+      applyDuration(
+        e.target.value,
+        durationSeconds
+      )
+    }
+  />
+  <span>:</span>
+  <input
+    type="number"
+    min="0"
+    max="59"
+    inputMode="numeric"
+    aria-label="Seconds"
+    value={String(durationSeconds)}
+    onFocus={(e) => e.target.select()}
+    onChange={(e) =>
+      applyDuration(
+        durationMinutes,
+        Math.min(
+          Number(e.target.value) || 0,
+          59
+        )
+      )
+    }
+  />
+</div>
+                        <p className="qpa-notes-hint">
+                          Max
+                          allowed:{" "}
+                          {formatClock(maxDurationSeconds)}. The
+                          timer starts when you type your
+                          first character.
+                        </p>
 
-                            <span>
-                              Typing in progress
-                            </span>
+                        <button
+                          type="button"
+                          className="qpa-start-test-btn"
+                          disabled={
+                            selectedDurationTotal <
+                            minDurationSeconds
+                          }
+                          onClick={handleStartTyping}
+                        >
+                          Start Typing
+                        </button>
+                      </div>
+                    )}
 
-                          </div>
+                    {/* ============ TYPING AREA (Phase 2) ============ */}
 
-                          <div className="learning-typing-stats">
+                    {stage === "typing" && (
+                      <div className="qpa-typing-card">
 
-                            <span>
-                              {wordCount}{" "}
-                              {wordCount === 1
-                                ? "word"
-                                : "words"}
-                            </span>
-
-                            <span>
-                              {characterCount}{" "}
-                              characters
-                            </span>
-
-                          </div>
-
+                        <div className="qpa-typing-topline">
+                          <span className="qpa-phase-badge">
+                            Transcription{" "}
+                            {hasStartedTyping
+                              ? "(In progress)"
+                              : "(Ready - Start Typing)"}
+                          </span>
+                          <span className="qpa-timer-pill">
+                            {formatClock(typingTimeRemaining)}
+                          </span>
                         </div>
+
+                        {timeUp && (
+                          <div className="qpa-timeup-banner">
+                            <i className="fa-solid fa-hourglass-end"></i>
+                            Time's up! Your dictation has
+                            been submitted.
+                          </div>
+                        )}
 
                         <textarea
                           ref={typingInputRef}
-                          className="learning-typing-input"
+                          className="qpa-typing-textarea"
                           value={typedText}
                           onChange={
                             handleTypingChange
                           }
-                          placeholder="Start typing the dictation here..."
+                          placeholder="Type your first character to start the timer..."
                           spellCheck="false"
                           autoComplete="off"
                           autoCorrect="off"
                           autoCapitalize="off"
+                          disabled={timeUp}
                           aria-label="Dictation typing area"
                         />
 
-                        <div className="learning-typing-footer">
-
+                        <div className="qpa-typing-footer">
                           <span>
-                            Listen carefully and
-                            reproduce the dictation
-                            as accurately as possible.
+                            Typed:{" "}
+                            <strong>
+                              {wordCount}
+                              {targetWordCount
+                                ? ` / ${targetWordCount}`
+                                : ""}
+                            </strong>
                           </span>
+
+                          {targetWordCount ? (
+                            <span
+                              className={
+                                targetWordCount - wordCount <= 0
+                                  ? "qpa-words-left qpa-words-left--done"
+                                  : "qpa-words-left"
+                              }
+                            >
+                              Words Left:{" "}
+                              {Math.max(
+                                0,
+                                targetWordCount - wordCount
+                              )}
+                            </span>
+                          ) : (
+                            <span>
+                              {characterCount} characters
+                            </span>
+                          )}
 
                           <button
                             type="button"
-                            className="qpa-btn qpa-btn-primary"
+                            className="qpa-end-test-btn"
                             disabled={
-                              !typedText.trim()
+                              !typedText.trim() || timeUp
                             }
-                            onClick={
-                              handleFinishDictation
+                            onClick={() =>
+                              handleFinishDictation(false)
                             }
                           >
-                            Finish Dictation
-                            <i className="fa-solid fa-arrow-right"></i>
+                            End Test
                           </button>
-
                         </div>
 
                       </div>
                     )}
 
-                    {/* DICTATION RESULTS */}
+                    {/* ============ DICTATION RESULTS ============ */}
 
-                    {dictationResult && (
+                    {stage === "result" && dictationResult && (
                       <section
                         className="dictation-results"
                         aria-labelledby="dictation-results-title"
@@ -1173,202 +1378,120 @@ typingStartedAtRef.current = null;
 
                         </div>
 
+                        {/* ===== WORD-BY-WORD DIFF GRID ===== */}
+
                         <div className="dictation-word-review">
 
                           <div className="dictation-word-review-header">
-
                             <div>
-
                               <span className="dictation-results-eyebrow">
                                 WORD ANALYSIS
                               </span>
-
                               <h3>
                                 Complete Word Comparison
                               </h3>
-
                               <p>
                                 Every word from the
-                                dictation is shown
-                                with your submitted
-                                version.
+                                dictation is shown with
+                                your submitted version.
                               </p>
-
                             </div>
-
-                            <div className="dictation-word-legend">
-
-                              <span className="dictation-legend-item">
-                                <i className="dictation-legend-dot dictation-legend-correct"></i>
-                                Correct
-                              </span>
-
-                              <span className="dictation-legend-item">
-                                <i className="dictation-legend-dot dictation-legend-half"></i>
-                                Half
-                              </span>
-
-                              <span className="dictation-legend-item">
-                                <i className="dictation-legend-dot dictation-legend-full"></i>
-                                Full
-                              </span>
-
-                              <span className="dictation-legend-item">
-                                <i className="dictation-legend-dot dictation-legend-missing"></i>
-                                Missing
-                              </span>
-
-                            </div>
-
                           </div>
 
-                          <div
-                            className="dictation-word-table"
-                            role="table"
-                            aria-label="Dictation word comparison"
-                          >
+                          <div className="qpa-result-legend">
+                            <span>
+                              <i className="qpa-legend-dot qpa-legend-dot--correct"></i>
+                              Correct
+                            </span>
+                            <span>
+                              <i className="qpa-legend-dot qpa-legend-dot--wrong"></i>
+                              Wrong Word (F)
+                            </span>
+                            <span>
+                              <i className="qpa-legend-dot qpa-legend-dot--half"></i>
+                              Half Mistake (H)
+                            </span>
+                            <span>
+                              <i className="qpa-legend-dot qpa-legend-dot--omission"></i>
+                              Omission (F)
+                            </span>
+                            <span>
+                              <i className="qpa-legend-dot qpa-legend-dot--extra"></i>
+                              Extra Word
+                            </span>
+                          </div>
 
-                            <div
-                              className="dictation-word-row dictation-word-row-head"
-                              role="row"
-                            >
+                          <div className="qpa-result-marking-note">
+                            <i className="fa-solid fa-circle-info"></i>
+                            Marking: Wrong word = 1 Full
+                            Mistake | Omitted word = 1
+                            Full Mistake | Spelling =
+                            Half Mistake
+                          </div>
 
-                              <span role="columnheader">
-                                #
-                              </span>
-
-                              <span role="columnheader">
-                                Expected Word
-                              </span>
-
-                              <span role="columnheader">
-                                Your Word
-                              </span>
-
-                              <span role="columnheader">
-                                Result
-                              </span>
-
-                              <span role="columnheader">
-                                Match
-                              </span>
-
-                            </div>
-
+                          <div className="qpa-word-grid">
                             {(
                               dictationResult.wordResults ||
                               []
-                            ).map((word) => (
-                              <div
-                                className={`dictation-word-row ${getDictationWordClassName(
-                                  word.classification
-                                )}`}
-                                key={word.index}
-                                role="row"
-                              >
+                            ).map((word, wordIndex) => {
+                              const cls =
+                                word.classification ===
+                                "full"
+                                  ? "wrong"
+                                  : word.classification ===
+                                    "missing"
+                                  ? "omission"
+                                  : word.classification;
 
-                                <span
-                                  className="dictation-word-index"
-                                  role="cell"
-                                >
-                                  {word.index + 1}
-                                </span>
+                              const badge =
+                                cls === "half"
+                                  ? "H"
+                                  : cls !== "correct"
+                                  ? "F"
+                                  : null;
 
+                              return (
                                 <span
-                                  className="dictation-expected-word"
-                                  role="cell"
+                                  key={`result-${wordIndex}-${word.sourceWord || word.expected || ""}`}
+                                  className={`qpa-word qpa-word--${cls}`}
                                 >
                                   {word.expected ||
                                     word.sourceWord ||
                                     "—"}
-                                </span>
-
-                                <span
-                                  className="dictation-typed-word"
-                                  role="cell"
-                                >
-                                  {word.typed ||
-                                    word.typedWord ||
-                                    "—"}
-                                </span>
-
-                                <span
-                                  className="dictation-word-result"
-                                  role="cell"
-                                >
-                                  <span className="dictation-word-badge">
-                                    {getDictationWordLabel(
-                                      word.classification
+                                  {badge && (
+                                    <sup className="qpa-word-badge">
+                                      {badge}
+                                    </sup>
+                                  )}
+                                  {(cls === "wrong" ||
+                                    cls === "half") &&
+                                    (word.typed ||
+                                      word.typedWord) && (
+                                      <span className="qpa-word-typed">
+                                        <i className="fa-solid fa-xmark"></i>
+                                        {word.typed ||
+                                          word.typedWord}
+                                      </span>
                                     )}
-                                  </span>
                                 </span>
-
-                                <span
-                                  className="dictation-word-similarity"
-                                  role="cell"
-                                >
-                                  {word.classification ===
-                                  "missing"
-                                    ? "—"
-                                    : `${Number(
-                                        word.similarity || 0
-                                      ).toFixed(0)}%`}
-                                </span>
-
-                              </div>
-                            ))}
+                              );
+                            })}
 
                             {(
                               dictationResult.extraWords ||
                               []
-                            ).map((word) => (
-                              <div
-                                className="dictation-word-row dictation-word-extra"
-                                key={`extra-${word.index}`}
-                                role="row"
+                            ).map((word, wordIndex) => (
+                              <span
+                                key={`extra-${wordIndex}-${word.typed || word.typedWord || ""}`}
+                                className="qpa-word qpa-word--extra"
                               >
-
-                                <span
-                                  className="dictation-word-index"
-                                  role="cell"
-                                >
-                                  {word.index + 1}
-                                </span>
-
-                                <span
-                                  className="dictation-expected-word"
-                                  role="cell"
-                                >
-                                  —
-                                </span>
-
-                                <span
-                                  className="dictation-typed-word"
-                                  role="cell"
-                                >
-                                  {word.typed ||
-                                    word.typedWord}
-                                </span>
-
-                                <span
-                                  className="dictation-word-result"
-                                  role="cell"
-                                >
-                                  <span className="dictation-word-badge">
-                                    Extra
-                                  </span>
-                                </span>
-
-                                <span
-                                  className="dictation-word-similarity"
-                                  role="cell"
-                                >
-                                  —
-                                </span>
-
-                              </div>
+                                {word.typed ||
+                                  word.typedWord}
+                                <sup className="qpa-word-badge">
+                                  +
+                                </sup>
+                              </span>
                             ))}
-
                           </div>
 
                         </div>

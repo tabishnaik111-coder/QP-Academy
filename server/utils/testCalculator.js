@@ -18,10 +18,7 @@ const normalizeTextForComparison = (text) => {
     .toLowerCase();
 };
 
-const getWordSimilarity = (
-  sourceWord,
-  typedWord
-) => {
+const getWordSimilarity = (sourceWord, typedWord) => {
   const source = normalizeWord(sourceWord);
   const typed = normalizeWord(typedWord);
 
@@ -60,6 +57,47 @@ const getWordSimilarity = (
   );
 };
 
+const getWordCharacterCounts = (
+  sourceWord,
+  typedWord
+) => {
+  const source = normalizeWord(sourceWord);
+  const typed = normalizeWord(typedWord);
+
+  if (!typed) {
+    return {
+      correctCharacters: 0,
+      incorrectCharacters: source.length,
+    };
+  }
+
+  let correctCharacters = 0;
+
+  const comparisonLength = Math.min(
+    source.length,
+    typed.length
+  );
+
+  for (
+    let i = 0;
+    i < comparisonLength;
+    i += 1
+  ) {
+    if (source[i] === typed[i]) {
+      correctCharacters += 1;
+    }
+  }
+
+  return {
+    correctCharacters,
+    incorrectCharacters:
+      Math.max(
+        source.length,
+        typed.length
+      ) - correctCharacters,
+  };
+};
+
 const classifyWord = (
   sourceWord,
   typedWord
@@ -90,13 +128,275 @@ const classifyWord = (
   return "full";
 };
 
+/*
+ * =========================================
+ * WORD SEQUENCE ALIGNMENT
+ * =========================================
+ *
+ * The old comparison used:
+ *
+ * sourceWords[index]
+ *        vs
+ * typedWords[index]
+ *
+ * That caused this problem:
+ *
+ * Expected:
+ *   the quick brown fox
+ *
+ * Typed:
+ *   the brown fox
+ *
+ * Old result:
+ *   the   -> the       correct
+ *   quick -> brown     full
+ *   brown -> fox       full
+ *   fox   -> missing
+ *
+ * The alignment below keeps later words aligned:
+ *
+ *   the   -> the       correct
+ *   quick ->           missing
+ *   brown -> brown     correct
+ *   fox   -> fox       correct
+ *
+ * Exact matches are preferred so that a missing
+ * word does not shift all following words.
+ */
+
+const alignWords = (
+  sourceWords,
+  typedWords
+) => {
+  const sourceLength =
+    sourceWords.length;
+
+  const typedLength =
+    typedWords.length;
+
+  const dp = Array.from(
+    {
+      length: sourceLength + 1,
+    },
+    () =>
+      Array(
+        typedLength + 1
+      ).fill(0)
+  );
+
+  const operation = Array.from(
+    {
+      length: sourceLength + 1,
+    },
+    () =>
+      Array(
+        typedLength + 1
+      ).fill(null)
+  );
+
+  /*
+   * Initial deletion costs.
+   */
+  for (
+    let i = 1;
+    i <= sourceLength;
+    i += 1
+  ) {
+    dp[i][0] = i;
+    operation[i][0] = "delete";
+  }
+
+  /*
+   * Initial insertion costs.
+   */
+  for (
+    let j = 1;
+    j <= typedLength;
+    j += 1
+  ) {
+    dp[0][j] = j;
+    operation[0][j] = "insert";
+  }
+
+  /*
+   * Build the alignment matrix.
+   */
+  for (
+    let i = 1;
+    i <= sourceLength;
+    i += 1
+  ) {
+    for (
+      let j = 1;
+      j <= typedLength;
+      j += 1
+    ) {
+      const sourceWord =
+        sourceWords[i - 1];
+
+      const typedWord =
+        typedWords[j - 1];
+
+      const exact =
+        normalizeWord(sourceWord) ===
+        normalizeWord(typedWord);
+
+      /*
+       * Exact matches have zero cost.
+       *
+       * Substitution has a slightly higher
+       * cost than deletion/insertion.
+       *
+       * This helps preserve later exact words.
+       */
+      const diagonalCost =
+        dp[i - 1][j - 1] +
+        (exact ? 0 : 1.5);
+
+      const deleteCost =
+        dp[i - 1][j] + 1;
+
+      const insertCost =
+        dp[i][j - 1] + 1;
+
+      /*
+       * Exact match always wins.
+       */
+      if (exact) {
+        dp[i][j] = diagonalCost;
+        operation[i][j] = "match";
+      } else if (
+        deleteCost <= insertCost &&
+        deleteCost < diagonalCost
+      ) {
+        dp[i][j] = deleteCost;
+        operation[i][j] = "delete";
+      } else if (
+        insertCost < diagonalCost
+      ) {
+        dp[i][j] = insertCost;
+        operation[i][j] = "insert";
+      } else {
+        dp[i][j] = diagonalCost;
+        operation[i][j] =
+          "substitute";
+      }
+    }
+  }
+
+  /*
+   * Reconstruct the alignment.
+   */
+  const aligned = [];
+
+  let i = sourceLength;
+  let j = typedLength;
+
+  while (i > 0 || j > 0) {
+    const currentOperation =
+      operation[i][j] ||
+      (i > 0
+        ? "delete"
+        : "insert");
+
+    /*
+     * Exact / paired word.
+     */
+    if (
+      currentOperation ===
+      "match"
+    ) {
+      aligned.push({
+        sourceIndex: i - 1,
+        typedIndex: j - 1,
+        sourceWord:
+          sourceWords[i - 1],
+        typedWord:
+          typedWords[j - 1],
+        kind: "paired",
+      });
+
+      i -= 1;
+      j -= 1;
+
+      continue;
+    }
+
+    /*
+     * Expected word was not typed.
+     */
+    if (
+      currentOperation ===
+      "delete"
+    ) {
+      aligned.push({
+        sourceIndex: i - 1,
+        typedIndex: null,
+        sourceWord:
+          sourceWords[i - 1],
+        typedWord: "",
+        kind: "missing",
+      });
+
+      i -= 1;
+
+      continue;
+    }
+
+    /*
+     * User typed an extra word.
+     */
+    if (
+      currentOperation ===
+      "insert"
+    ) {
+      aligned.push({
+        sourceIndex: null,
+        typedIndex: j - 1,
+        sourceWord: "",
+        typedWord:
+          typedWords[j - 1],
+        kind: "extra",
+      });
+
+      j -= 1;
+
+      continue;
+    }
+
+    /*
+     * Different words occupying the same
+     * position. This is still treated as
+     * a paired word and classified as
+     * half/full using the existing logic.
+     */
+    aligned.push({
+      sourceIndex: i - 1,
+      typedIndex: j - 1,
+      sourceWord:
+        sourceWords[i - 1],
+      typedWord:
+        typedWords[j - 1],
+      kind: "paired",
+    });
+
+    i -= 1;
+    j -= 1;
+  }
+
+  return aligned.reverse();
+};
+
 export const calculateTestResult = ({
   sourceText,
   typedText,
   durationSeconds,
 }) => {
-  const source = String(sourceText || "");
-  const typed = String(typedText || "");
+  const source =
+    String(sourceText || "");
+
+  const typed =
+    String(typedText || "");
 
   const safeDuration = Math.max(
     1,
@@ -117,18 +417,24 @@ export const calculateTestResult = ({
    */
 
   const normalizedSource =
-    normalizeTextForComparison(source);
+    normalizeTextForComparison(
+      source
+    );
 
   const normalizedTyped =
-    normalizeTextForComparison(typed);
+    normalizeTextForComparison(
+      typed
+    );
 
   let correctCharacters = 0;
+
   let incorrectCharacters = 0;
 
-  const comparisonLength = Math.max(
-    normalizedSource.length,
-    normalizedTyped.length
-  );
+  const comparisonLength =
+    Math.max(
+      normalizedSource.length,
+      normalizedTyped.length
+    );
 
   for (
     let i = 0;
@@ -136,8 +442,10 @@ export const calculateTestResult = ({
     i += 1
   ) {
     if (
-      i < normalizedSource.length &&
-      i < normalizedTyped.length &&
+      i <
+        normalizedSource.length &&
+      i <
+        normalizedTyped.length &&
       normalizedSource[i] ===
         normalizedTyped[i]
     ) {
@@ -147,7 +455,8 @@ export const calculateTestResult = ({
     }
   }
 
-  const mistakes = incorrectCharacters;
+  const mistakes =
+    incorrectCharacters;
 
   const accuracy =
     normalizedTyped.length === 0
@@ -155,11 +464,13 @@ export const calculateTestResult = ({
       : Math.min(
           100,
           Math.round(
-            (correctCharacters /
+            (
+              correctCharacters /
               Math.max(
                 1,
                 comparisonLength
-              )) *
+              )
+            ) *
               10000
           ) / 100
         );
@@ -178,9 +489,11 @@ export const calculateTestResult = ({
       ? Math.max(
           0,
           Math.round(
-            (normalizedTyped.length /
+            (
+              normalizedTyped.length /
               5 /
-              minutes) *
+              minutes
+            ) *
               100
           ) / 100
         )
@@ -192,12 +505,11 @@ export const calculateTestResult = ({
    * =========================================
    */
 
-  const speedScore = Math.min(
-    100,
-    wpm
-  );
+  const speedScore =
+    Math.min(100, wpm);
 
-  const accuracyScore = accuracy;
+  const accuracyScore =
+    accuracy;
 
   const score = Math.max(
     0,
@@ -205,7 +517,8 @@ export const calculateTestResult = ({
       (
         speedScore * 0.5 +
         accuracyScore * 0.5
-      ) * 100
+      ) *
+        100
     ) / 100
   );
 
@@ -215,56 +528,167 @@ export const calculateTestResult = ({
    * =========================================
    */
 
-  const sourceWords = source.trim()
-    ? source.trim().split(/\s+/)
-    : [];
+  const sourceWords =
+    source.trim()
+      ? source
+          .trim()
+          .split(/\s+/)
+      : [];
 
-  const typedWords = typed.trim()
-    ? typed.trim().split(/\s+/)
-    : [];
+  const typedWords =
+    typed.trim()
+      ? typed
+          .trim()
+          .split(/\s+/)
+      : [];
 
   /*
    * =========================================
-   * WORD-LEVEL COMPARISON
+   * ALIGNED WORD-LEVEL COMPARISON
    * =========================================
    */
 
+  const alignedWords =
+    alignWords(
+      sourceWords,
+      typedWords
+    );
+
   const wordResults = [];
 
+  const extraWords = [];
+
   let correctWords = 0;
+
   let halfMistakeWords = 0;
+
   let fullMistakeWords = 0;
+
   let missingWords = 0;
 
-  sourceWords.forEach(
-    (sourceWord, index) => {
-      const typedWord =
-        typedWords[index] || "";
+  alignedWords.forEach(
+    (word, resultIndex) => {
+      /*
+       * =====================================
+       * EXTRA WORD
+       * =====================================
+       */
 
+      if (
+        word.kind === "extra"
+      ) {
+        extraWords.push({
+          index:
+            word.typedIndex !==
+            null
+              ? word.typedIndex
+              : resultIndex,
+
+          expected: "",
+
+          typed:
+            word.typedWord,
+
+          classification:
+            "extra",
+
+          similarity: 0,
+        });
+
+        return;
+      }
+
+      const sourceWord =
+        word.sourceWord;
+
+      const typedWord =
+        word.typedWord || "";
+
+      /*
+       * Missing words are explicitly
+       * classified as missing.
+       */
       const classification =
-        classifyWord(
+        word.kind === "missing"
+          ? "missing"
+          : classifyWord(
+              sourceWord,
+              typedWord
+            );
+
+      const similarity =
+        typedWord
+          ? Math.round(
+              getWordSimilarity(
+                sourceWord,
+                typedWord
+              ) * 100
+            ) / 100
+          : 0;
+
+      /*
+       * Per-word character counts.
+       *
+       * These fields match the
+       * DictationResult wordResult schema.
+       */
+      const characterCounts =
+        getWordCharacterCounts(
           sourceWord,
           typedWord
         );
 
-      const similarity = typedWord
-        ? Math.round(
-            getWordSimilarity(
-              sourceWord,
-              typedWord
-            ) * 100
-          ) / 100
-        : 0;
+      const result = {
+        /*
+         * Keep the source-word index
+         * stable for the frontend.
+         */
+        index:
+          word.sourceIndex !==
+          null
+            ? word.sourceIndex
+            : resultIndex,
 
-      wordResults.push({
-        index,
-        expected: sourceWord,
-        typed: typedWord,
+        /*
+         * Fields expected by
+         * DictationResult.
+         */
+        sourceWord,
+
+        typedWord,
+
+        /*
+         * Preserve the old frontend
+         * compatible fields.
+         */
+        expected:
+          sourceWord,
+
+        typed:
+          typedWord,
+
         classification,
-        similarity,
-      });
 
-      switch (classification) {
+        similarity,
+
+        correctCharacters:
+          characterCounts.correctCharacters,
+
+        incorrectCharacters:
+          characterCounts.incorrectCharacters,
+      };
+
+      wordResults.push(result);
+
+      /*
+       * =====================================
+       * COUNTS
+       * =====================================
+       */
+
+      switch (
+        classification
+      ) {
         case "correct":
           correctWords += 1;
           break;
@@ -286,33 +710,6 @@ export const calculateTestResult = ({
       }
     }
   );
-
-  /*
-   * =========================================
-   * EXTRA WORDS
-   * =========================================
-   */
-
-  const extraWords = [];
-
-  if (
-    typedWords.length >
-    sourceWords.length
-  ) {
-    for (
-      let i = sourceWords.length;
-      i < typedWords.length;
-      i += 1
-    ) {
-      extraWords.push({
-        index: i,
-        expected: "",
-        typed: typedWords[i],
-        classification: "extra",
-        similarity: 0,
-      });
-    }
-  }
 
   /*
    * =========================================
@@ -356,16 +753,23 @@ export const calculateTestResult = ({
 
   return {
     correctCharacters,
+
     incorrectCharacters,
+
     mistakes,
+
     wpm,
+
     accuracy,
+
     score,
 
     sourceWords,
+
     typedWords,
 
     wordResults,
+
     extraWords,
 
     totalWords:
@@ -375,20 +779,33 @@ export const calculateTestResult = ({
       typedWords.length,
 
     correctWords,
+
     halfMistakeWords,
+
     fullMistakeWords,
+
     missingWords,
 
     correctWordResults,
+
     halfMistakeWordResults,
+
     fullMistakeWordResults,
+
     missingWordResults,
 
     mistakesByType: {
-      half: halfMistakeWords,
-      full: fullMistakeWords,
-      missing: missingWordResults.length,
-      extra: extraWords.length,
+      half:
+        halfMistakeWords,
+
+      full:
+        fullMistakeWords,
+
+      missing:
+        missingWordResults.length,
+
+      extra:
+        extraWords.length,
     },
   };
 };

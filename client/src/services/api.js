@@ -192,21 +192,11 @@ export const getTestById = async (testId) => {
   return apiRequest(`/tests/${testId}`);
 };
 
-// Now accepts the student's chosen dictation speed (wpm) and typing
-// duration (durationSeconds) from the listening-setup screen and
-// forwards them to the backend, which clamps/validates them.
-export const startTest = async (
-  testId,
-  { wpm, durationSeconds } = {}
-) => {
+export const startTest = async (testId) => {
   return apiRequest(
     `/tests/${testId}/start`,
     {
       method: "POST",
-      body: JSON.stringify({
-        wpm,
-        durationSeconds,
-      }),
     }
   );
 };
