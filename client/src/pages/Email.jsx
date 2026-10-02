@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-const SUPPORT_EMAIL = "yourqpasupport@gmail.com";
+const SUPPORT_EMAIL = "quickpenacademy111@gmail.com";
 
 const Email = () => {
   const subject = encodeURIComponent("QPA Support Request");

@@ -27,7 +27,7 @@ function Footer() {
 
             <div className="qpa-footer-socials">
               <a
-                href="https://www.instagram.com/t._abish_/"
+                href="https://www.instagram.com/quick_pen_academy/"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Instagram"
@@ -36,7 +36,7 @@ function Footer() {
               </a>
 
               <a
-                href="https://www.youtube.com/@TabishNaik1"
+                href="http://www.youtube.com/@QuickPenAcademy_111"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="YouTube"
@@ -45,10 +45,10 @@ function Footer() {
               </a>
 
               <a
-                href="#"
-                aria-label="Facebook"
+                href="https://www.t.me/quickpenacademy01"
+                aria-label="Telegram"
               >
-                <i className="fa-brands fa-facebook-f"></i>
+                <i className="fa-brands fa-telegram"></i>
               </a>
             </div>
           </div>

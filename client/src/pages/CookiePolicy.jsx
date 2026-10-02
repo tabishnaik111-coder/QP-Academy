@@ -1,3 +1,6 @@
+const SUPPORT_EMAIL = "quickpenacademy111@gmail.com";
+const gmailLink = `https://mail.google.com/mail/?view=cm&fs=1&to=${SUPPORT_EMAIL}`;
+
 const CookiePolicy = () => {
   return (
     <main className="legal-page">
@@ -69,8 +72,8 @@ const CookiePolicy = () => {
           <h2>6. Contact us</h2>
           <p>
             Questions about cookies can be sent to{" "}
-            <a href="mailto:support@qpa-academy.example">
-              support@qpa-academy.example
+            <a href={gmailLink}>
+              quickpenacademy111@gmail.com
             </a>
             .
           </p>
